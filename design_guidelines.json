@@ -1,0 +1,115 @@
+{
+  "theme": "dark",
+  "archetype": "Archetype 7 (Electric & Neon) combined with Archetype 5 (Luxury) for a premium dark mode feel.",
+  "global_colors": {
+    "background_void": "#030305",
+    "surface_base": "#0A0A10",
+    "glass_panel": "rgba(255, 255, 255, 0.03)",
+    "glass_border": "rgba(255, 255, 255, 0.08)",
+    "text_primary": "#FFFFFF",
+    "text_secondary": "#A1A1AA",
+    "gradient": {
+      "pink": "#FF007F",
+      "violet": "#581C87",
+      "cyan": "#00E5FF"
+    }
+  },
+  "typography": {
+    "heading_font": "Outfit",
+    "body_font": "DM Sans",
+    "rules": [
+      "Headings: Outfit, ExtraBold or Black, tracking-tighter.",
+      "Body: DM Sans, Regular or Medium, leading-relaxed.",
+      "NEVER use generic fonts like Inter for headings."
+    ]
+  },
+  "layout_spacing": {
+    "grid_system": "Mode A: Tetris Grid for bento layouts. Asymmetry is mandatory.",
+    "section_padding": "py-24 lg:py-32",
+    "card_padding": "p-8 md:p-12",
+    "optical_alignment": "Ensure generous breathing room. Dark mode requires more negative space to feel premium."
+  },
+  "design_features": {
+    "glassmorphism": "Use backdrop-blur-2xl or 3xl with bg-white/[0.03] and border-white/[0.08]. Add subtle inner glow using box-shadow inset.",
+    "gradient_blobs": "Implement via absolute positioned div elements with bg-gradient-to-r from-[#FF007F] via-[#581C87] to-[#00E5FF]. Apply blur-[120px] or blur-[160px] and opacity-20 to opacity-30. Place behind hero text and key sections.",
+    "3d_mouse_tilt_cards": "Wrap service/case study cards in `react-parallax-tilt` to create a tactile 3D effect on mouse hover. Apply glare effect if possible.",
+    "floating_phone_mockups": "Use `framer-motion` to animate phone mockup frames (`animate={{ y: [0, -20, 0] }}`). Place these dynamically in the hero section.",
+    "animated_marquee": "Use `react-fast-marquee`. Mix solid white client logos and outline typography for a 'Kinetic Texture' look. Low opacity for subtlety."
+  },
+  "section_blueprints": [
+    {
+      "name": "Sticky Navbar",
+      "description": "Glassmorphism header (backdrop-blur-xl bg-black/40). z-50. Minimal brand logo, navigation links, and a primary CTA 'Book a Call' with a gradient border."
+    },
+    {
+      "name": "Hero Section",
+      "description": "Massive H1 'Bold. Dark. Viral.' with gradient text (pink-violet-cyan). Background has large gradient blobs. Right side or background features floating 3D phone mockups. Strong CTA to scroll down."
+    },
+    {
+      "name": "Marquee",
+      "description": "Infinite horizontal scroll of brand logos that have worked with ColabRise."
+    },
+    {
+      "name": "Services (Bento Grid)",
+      "description": "Tetris grid bento boxes for services (Matchmaking, Campaign Management, Analytics). Use mouse-tilt 3D cards. High contrast icons."
+    },
+    {
+      "name": "Case Studies / Social Proof",
+      "description": "Cards showcasing neon-lit portraits of influencers. Metrics highlighted in large typography."
+    },
+    {
+      "name": "Pricing Tiers",
+      "description": "Glassmorphism cards. Highlight the 'Pro' tier with a tracing beam or glowing gradient border. Use clear checkmarks."
+    },
+    {
+      "name": "Lead Capture Form (Book a call)",
+      "description": "Form block connected to the backend. Glassmorphism inputs (bg-white/5, border-white/10). Focus states glow with cyan. Must include data-testid='lead-capture-form'."
+    },
+    {
+      "name": "FAQ",
+      "description": "Accordion style FAQ with glassmorphism panels."
+    },
+    {
+      "name": "Footer",
+      "description": "Deep dark void background. Massive brand text in the background. Clean column links."
+    }
+  ],
+  "image_urls": [
+    {
+      "category": "floating_phone_placeholder",
+      "url": "https://images.unsplash.com/photo-1483478550801-ceba5fe50e8e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMzN8MHwxfHNlYXJjaHwzfHxzbWFydHBob25lJTIwZGFya3xlbnwwfHx8fDE3ODE1NTQwODN8MA&ixlib=rb-4.1.0&q=85",
+      "description": "Placeholder image for inside the floating phone mockups."
+    },
+    {
+      "category": "marquee_logos",
+      "url": "https://images.unsplash.com/photo-1644166186783-35d911470ff0?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxNzV8MHwxfHNlYXJjaHwxfHxicmFuZCUyMGxvZ28lMjB3aGl0ZSUyMGJhY2tncm91bmR8ZW58MHx8fHwxNzgxNTU0MDgzfDA&ixlib=rb-4.1.0&q=85",
+      "description": "Brand logo for marquee."
+    },
+    {
+      "category": "marquee_logos",
+      "url": "https://images.unsplash.com/photo-1586867026567-b9b63ae58472?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxNzV8MHwxfHNlYXJjaHw0fHxicmFuZCUyMGxvZ28lMjB3aGl0ZSUyMGJhY2tncm91bmR8ZW58MHx8fHwxNzgxNTU0MDgzfDA&ixlib=rb-4.1.0&q=85",
+      "description": "Brand logo for marquee."
+    },
+    {
+      "category": "influencer_portraits",
+      "url": "https://images.unsplash.com/photo-1548361403-cb0c785eea54?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMjd8MHwxfHNlYXJjaHwxfHxuZW9uJTIwZmFzaGlvbiUyMHBvcnRyYWl0fGVufDB8fHx8MTc4MTU1NDA4M3ww&ixlib=rb-4.1.0&q=85",
+      "description": "Neon fashion portrait for influencer case study."
+    },
+    {
+      "category": "influencer_portraits",
+      "url": "https://images.unsplash.com/photo-1649935819961-18b1c2267995?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMjd8MHwxfHNlYXJjaHwyfHxuZW9uJTIwZmFzaGlvbiUyMHBvcnRyYWl0fGVufDB8fHx8MTc4MTU1NDA4M3ww&ixlib=rb-4.1.0&q=85",
+      "description": "Neon fashion portrait for influencer case study."
+    }
+  ],
+  "accessibility_and_testing": {
+    "contrast": "Ensure white text over gradient blobs remains readable (use text-shadow if necessary).",
+    "testing": "All interactive elements, forms, and cards MUST include data-testid attributes formatted in kebab-case based on their role (e.g., data-testid='hero-cta-button', data-testid='lead-capture-form')."
+  },
+  "instructions_to_main_agent": [
+    "Install `framer-motion`, `react-fast-marquee`, and `react-parallax-tilt`.",
+    "Use pure HTML/Tailwind for structural bento layouts, NOT Shadcn cards, to maintain creative freedom and avoid rigidness.",
+    "Use Shadcn for complex interactives like the 'Book a call' form and FAQ accordion, but heavily customize its styles to fit the dark glassmorphism theme.",
+    "Ensure the hero gradient strictly uses the #FF007F, #581C87, #00E5FF colors and avoids any banned colors.",
+    "Construct the floating phones using a simple wrapper div that uses framer-motion `animate` prop for floating, with a stylized border simulating a phone frame."
+  ]
+}
