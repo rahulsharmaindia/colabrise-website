@@ -1,0 +1,14 @@
+[build]
+  base    = "frontend"
+  command = "yarn build"
+  publish = "frontend/build"
+
+[build.environment]
+  NODE_VERSION = "20"
+  CI = "false"
+
+# SPA fallback — let React Router handle client-side routes
+[[redirects]]
+  from   = "/*"
+  to     = "/index.html"
+  status = 200
