@@ -14,7 +14,7 @@ export default function Stats() {
         {stats.map((stat) => (
           <TiltCard key={stat.label} tiltStrength={10}>
             <div className="glass-card p-8 text-center">
-              <p className={`text-4xl md:text-5xl font-extrabold bg-gradient-to-r ${stat.gradient} bg-clip-text text-transparent drop-shadow-[0_0_12px_rgba(168,85,247,0.4)]`}>
+              <p className={`text-3xl md:text-4xl font-semibold bg-gradient-to-r ${stat.gradient} bg-clip-text text-transparent drop-shadow-[0_0_12px_rgba(168,85,247,0.4)]`}>
                 {stat.value}
               </p>
               <p className="text-base text-gray-400 mt-2">{stat.label}</p>

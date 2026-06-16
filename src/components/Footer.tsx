@@ -12,7 +12,7 @@ export default function Footer() {
         <div className="col-span-2 md:col-span-1">
           <div className="flex items-center gap-2 mb-4">
             <div className="w-3 h-3 rounded-full bg-gradient-to-r from-pink-400 to-purple-500" />
-            <span className="text-white font-bold text-lg">Colabrise</span>
+            <span className="text-white font-semibold text-lg">Colabrise</span>
           </div>
           <p className="text-gray-500 text-xs">
             Where creators and brands collab rise.

@@ -12,14 +12,14 @@ export default function Hero() {
             AI GROWTH ASSISTANT · NOW IN BETA
           </div>
 
-          <h1 className="font-display text-6xl md:text-7xl lg:text-8xl font-extrabold leading-[1.0] tracking-tight mb-6">
+          <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-semibold leading-[1.0] tracking-tight mb-6">
             Where<br />
             creators<br />
             and brands<br />
             <span className="text-gradient">collab rise.</span>
           </h1>
 
-          <p className="text-gray-400 text-lg max-w-md mb-8 leading-relaxed">
+          <p className="text-gray-400 text-base md:text-lg max-w-md mb-8 leading-relaxed">
             Colabrise is the collaboration platform with an AI growth assistant built in — match, brief, create, and grow, all in one place.
           </p>
 
@@ -35,9 +35,9 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className="relative flex justify-center items-center min-h-[560px]">
+        <div className="relative flex justify-center items-center min-h-[476px]">
           <TiltCard tiltStrength={8}>
-            <div className="p-4 w-[700px] h-[560px] relative">
+            <div className="p-4 w-[595px] h-[476px] relative">
               {/* Left card */}
               <PhoneMockup
                 className="absolute left-0 top-[120px] z-10 -rotate-6"

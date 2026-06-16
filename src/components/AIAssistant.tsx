@@ -35,11 +35,11 @@ export default function AIAssistant() {
             AI GROWTH ASSISTANT
           </div>
 
-          <h2 className="font-display text-5xl md:text-6xl font-extrabold mb-6 leading-[1.05]">
+          <h2 className="font-display text-3xl md:text-4xl font-semibold mb-6 leading-[1.05]">
             Your <span className="text-gradient italic">always-on</span><br />
             growth partner.
           </h2>
-          <p className="text-gray-400 leading-relaxed mb-10 max-w-lg text-lg">
+          <p className="text-gray-400 leading-relaxed mb-10 max-w-lg text-base">
             Every creator and brand on Colabrise gets a dedicated AI assistant trained on their audience, content, and goals — predicting what to post, who to collab with, and what to charge.
           </p>
 
@@ -48,7 +48,7 @@ export default function AIAssistant() {
             {aiFeatures.map((feature) => (
               <div key={feature.title} className="rounded-2xl border border-white/10 bg-dark-800 p-6">
                 <feature.icon className="w-7 h-7 text-gray-400 mb-3" />
-                <h4 className="text-white text-base font-bold mb-2">{feature.title}</h4>
+                <h4 className="text-white text-base font-semibold mb-2">{feature.title}</h4>
                 <p className="text-gray-500 text-sm leading-relaxed">{feature.description}</p>
               </div>
             ))}
@@ -58,14 +58,14 @@ export default function AIAssistant() {
         {/* Right: Chat Mockup */}
         <div className="flex justify-center">
           <TiltCard tiltStrength={20}>
-            <div className="glass-card p-8 w-full max-w-lg">
+            <div className="glass-card p-8 w-full max-w-lg shadow-[0_20px_80px_-10px_rgba(139,92,246,0.4),0_10px_40px_-5px_rgba(236,72,153,0.3)]">
               {/* Header */}
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
                   <Sparkles className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <p className="text-white font-bold text-base">Colabrise AI</p>
+                  <p className="text-white font-semibold text-base">Colabrise AI</p>
                   <p className="text-gray-500 text-sm flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-green-400" />
                     Online · learning your audience
@@ -110,7 +110,7 @@ export default function AIAssistant() {
                     { value: '$12K', label: 'est. rev' },
                   ].map((item) => (
                     <div key={item.label} className="flex-1 rounded-xl bg-white/5 border border-white/10 p-3 text-center">
-                      <p className="text-gradient font-bold text-base">{item.value}</p>
+                      <p className="text-gradient font-semibold text-base">{item.value}</p>
                       <p className="text-gray-500 text-xs mt-0.5">{item.label}</p>
                     </div>
                   ))}

@@ -17,7 +17,7 @@ export default function PhoneMockup({ className = '', gradient, label, stat, sub
     >
       {/* Outer thick gradient border */}
       <div
-        className={`${isMain ? 'w-[270px] h-[416px]' : 'w-[208px] h-[312px]'} rounded-[28px] bg-gradient-to-br ${gradient} p-[14px] animate-float relative`}
+        className={`${isMain ? 'w-[230px] h-[354px]' : 'w-[177px] h-[265px]'} rounded-[28px] bg-gradient-to-br ${gradient} p-[12px] animate-float relative`}
         style={{ animationDelay: isMain ? '0s' : '1.5s' }}
       >
         {/* Glow effect behind card */}
@@ -53,7 +53,7 @@ export default function PhoneMockup({ className = '', gradient, label, stat, sub
               {!isMain && label && (
                 <p className="text-[11px] text-white/80 font-medium">{label}</p>
               )}
-              <p className={`${isMain ? 'text-3xl mt-1' : 'text-2xl mt-1'} font-bold text-white`}>{stat}</p>
+              <p className={`${isMain ? 'text-3xl mt-1' : 'text-2xl mt-1'} font-semibold text-white`}>{stat}</p>
               {isMain && subtext && (
                 <p className="text-xs text-white/60 mt-0.5">{subtext}</p>
               )}

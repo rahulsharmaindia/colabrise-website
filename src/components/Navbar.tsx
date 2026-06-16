@@ -7,7 +7,7 @@ export default function Navbar() {
     <nav className="relative z-50 flex items-center justify-between px-6 md:px-12 py-4 max-w-7xl mx-auto">
       <div className="flex items-center gap-2">
         <div className="w-3 h-3 rounded-full bg-gradient-to-r from-pink-400 to-purple-500" />
-        <span className="text-white font-bold text-xl">Colabrise</span>
+        <span className="text-white font-semibold text-xl">Colabrise</span>
       </div>
 
       <div className="hidden md:flex items-center gap-8">
