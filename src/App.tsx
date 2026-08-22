@@ -1,30 +1,19 @@
-import Navbar from './components/Navbar'
-import Hero from './components/Hero'
-import Marquee from './components/Marquee'
-import Stats from './components/Stats'
-import Creators from './components/Creators'
-import Platform from './components/Platform'
-import AIAssistant from './components/AIAssistant'
-import CTA from './components/CTA'
-import Footer from './components/Footer'
-import GradientBlobs from './components/GradientBlobs'
+import { Route, Routes } from 'react-router-dom'
+import HomePage from './pages/HomePage'
+import BrandRegisterPage from './pages/BrandRegisterPage'
+import InfluencerRegisterPage from './pages/InfluencerRegisterPage'
+import NotFoundPage from './pages/NotFoundPage'
+import { DashboardRoutes } from './dashboard/routes'
 
 function App() {
   return (
-    <div className="relative min-h-screen bg-dark-900">
-      <GradientBlobs />
-      <Navbar />
-      <main>
-        <Hero />
-        <Marquee />
-        <Stats />
-        <Creators />
-        <Platform />
-        <AIAssistant />
-        <CTA />
-      </main>
-      <Footer />
-    </div>
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/brands/register" element={<BrandRegisterPage />} />
+      <Route path="/creators/register" element={<InfluencerRegisterPage />} />
+      {DashboardRoutes()}
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes>
   )
 }
 

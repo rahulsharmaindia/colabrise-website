@@ -1,3 +1,5 @@
+import { FaXTwitter, FaInstagram, FaLinkedinIn } from 'react-icons/fa6'
+
 const footerLinks = {
   Platform: ['AI Matchmaking', 'Growth Co-Pilot', 'Deal Flow', 'Analytics'],
   Company: ['About', 'Careers', 'Blog', 'Press'],
@@ -7,7 +9,7 @@ const footerLinks = {
 
 export default function Footer() {
   return (
-    <footer className="relative z-10 border-t border-white/5 px-6 md:px-12 py-12 max-w-7xl mx-auto">
+    <footer id="footer" className="relative z-10 border-t border-white/5 px-6 md:px-12 py-12 max-w-7xl mx-auto">
       <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
         <div className="col-span-2 md:col-span-1">
           <div className="flex items-center gap-2 mb-4">
@@ -38,9 +40,15 @@ export default function Footer() {
       <div className="mt-12 pt-6 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
         <p className="text-gray-600 text-xs">© 2024 Colabrise. All rights reserved.</p>
         <div className="flex gap-4">
-          <a href="#" className="text-gray-500 text-xs hover:text-gray-300 transition-colors">Twitter</a>
-          <a href="#" className="text-gray-500 text-xs hover:text-gray-300 transition-colors">Instagram</a>
-          <a href="#" className="text-gray-500 text-xs hover:text-gray-300 transition-colors">LinkedIn</a>
+          <a href="#" className="text-gray-500 hover:text-gray-300 transition-colors" aria-label="Twitter">
+            <FaXTwitter className="w-4 h-4" />
+          </a>
+          <a href="#" className="text-gray-500 hover:text-gray-300 transition-colors" aria-label="Instagram">
+            <FaInstagram className="w-4 h-4" />
+          </a>
+          <a href="#" className="text-gray-500 hover:text-gray-300 transition-colors" aria-label="LinkedIn">
+            <FaLinkedinIn className="w-4 h-4" />
+          </a>
         </div>
       </div>
     </footer>

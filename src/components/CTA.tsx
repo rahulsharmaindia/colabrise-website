@@ -2,7 +2,7 @@ import { ArrowUpRight } from 'lucide-react'
 
 export default function CTA() {
   return (
-    <section className="relative z-10 px-6 md:px-12 py-20 max-w-7xl mx-auto">
+    <section id="contact" className="relative z-10 px-6 md:px-12 py-20 max-w-7xl mx-auto">
       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-pink-400 via-purple-400 to-cyan-400 p-12 md:p-16">
         <div className="relative z-10">
           <h2 className="font-display text-4xl md:text-5xl font-semibold leading-tight mb-4 text-black">

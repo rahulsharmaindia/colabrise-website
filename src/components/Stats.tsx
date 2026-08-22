@@ -9,7 +9,7 @@ const stats = [
 
 export default function Stats() {
   return (
-    <section className="relative z-10 px-6 md:px-12 py-20 max-w-7xl mx-auto font-sans">
+    <section id="stats" className="relative z-10 px-6 md:px-12 py-20 max-w-7xl mx-auto font-sans">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
         {stats.map((stat) => (
           <TiltCard key={stat.label} tiltStrength={10}>

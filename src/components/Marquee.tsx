@@ -4,7 +4,7 @@ const brands = ['FENTY', 'RHODE', 'DUOLINGO', 'OURA', 'ARC', 'LIQUID DEATH']
 
 export default function Marquee() {
   return (
-    <section className="relative z-10 py-8 border-t border-b border-white/5 overflow-hidden">
+    <section id="brands" className="relative z-10 py-8 border-t border-b border-white/5 overflow-hidden">
       <div className="flex animate-marquee whitespace-nowrap">
         {[...brands, ...brands].map((brand, i) => (
           <div key={i} className="flex items-center gap-2 mx-8">

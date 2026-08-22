@@ -1,4 +1,5 @@
-import { Instagram, Play } from 'lucide-react'
+import { Play } from 'lucide-react'
+import { FaInstagram } from 'react-icons/fa6'
 
 interface PhoneMockupProps {
   className?: string
@@ -36,7 +37,7 @@ export default function PhoneMockup({ className = '', gradient, label, stat, sub
               {/* Icon */}
               {icon === 'instagram' && (
                 <div className="w-7 h-7 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justify-center mb-2">
-                  <Instagram className="w-4 h-4 text-white" />
+                  <FaInstagram className="w-4 h-4 text-white" />
                 </div>
               )}
               {icon === 'play' && (

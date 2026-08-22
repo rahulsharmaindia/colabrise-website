@@ -1,4 +1,4 @@
-import { Instagram, Youtube, Twitter } from 'lucide-react'
+import { FaInstagram, FaYoutube, FaXTwitter } from 'react-icons/fa6'
 import TiltCard from './TiltCard'
 
 const creators = [
@@ -64,9 +64,9 @@ export default function Creators() {
                 <span className="text-gray-500 text-xs ml-1.5">followers</span>
               </p>
               <div className="flex gap-3 mt-3">
-                <Instagram className="w-4 h-4 text-gray-500 hover:text-gray-300 transition-colors cursor-pointer" />
-                <Youtube className="w-4 h-4 text-gray-500 hover:text-gray-300 transition-colors cursor-pointer" />
-                <Twitter className="w-4 h-4 text-gray-500 hover:text-gray-300 transition-colors cursor-pointer" />
+                <FaInstagram className="w-4 h-4 text-gray-500 hover:text-gray-300 transition-colors cursor-pointer" />
+                <FaYoutube className="w-4 h-4 text-gray-500 hover:text-gray-300 transition-colors cursor-pointer" />
+                <FaXTwitter className="w-4 h-4 text-gray-500 hover:text-gray-300 transition-colors cursor-pointer" />
               </div>
             </div>
           </TiltCard>
