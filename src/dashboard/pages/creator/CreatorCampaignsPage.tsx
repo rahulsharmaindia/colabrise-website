@@ -549,12 +549,18 @@ function CreatorCampaignCard({
           {/* Share button */}
           <button
             onClick={() => {
-              const shareUrl = `${window.location.origin}/campaigns/${campaign.campaignId}`
+              const params = new URLSearchParams()
+              params.set('id', campaign.campaignId)
+              params.set('t', campaign.title)
+              if (campaign.brandName) params.set('b', campaign.brandName)
+              if (campaign.description) params.set('d', campaign.description.slice(0, 120))
+              if (campaign.budgetPerCreator) params.set('p', String(campaign.budgetPerCreator))
+              if (campaign.preferredNiche) params.set('n', campaign.preferredNiche)
+              const shareUrl = `${window.location.origin}/api/og?${params.toString()}`
               if (navigator.share) {
                 navigator.share({ title: campaign.title, text: campaign.description ?? '', url: shareUrl })
               } else {
                 navigator.clipboard.writeText(shareUrl)
-                // Could show a toast here — for now just copies to clipboard
               }
             }}
             className="shrink-0 flex items-center justify-center w-9 h-9 rounded-xl border border-gray-200 dark:border-white/[0.08] text-gray-400 hover:text-purple-400 hover:border-purple-400/30 transition-colors"
