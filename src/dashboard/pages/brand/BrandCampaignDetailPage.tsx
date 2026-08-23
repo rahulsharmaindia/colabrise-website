@@ -131,7 +131,7 @@ export function BrandCampaignDetailPage({ campaignId, onBack, onEdit, onDuplicat
     return (
       <div className="flex flex-col items-center justify-center py-24 gap-3">
         <Loader2 className="w-7 h-7 text-purple-400 animate-spin" />
-        <p className="text-sm text-gray-500">Loading campaign details...</p>
+        <p className="text-sm text-gray-400 dark:text-gray-500">Loading campaign details...</p>
       </div>
     )
   }
@@ -139,7 +139,7 @@ export function BrandCampaignDetailPage({ campaignId, onBack, onEdit, onDuplicat
   if (error) {
     return (
       <div className="space-y-6">
-        <button onClick={onBack} className="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors">
+        <button onClick={onBack} className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
           <ArrowLeft className="w-4 h-4" /> Back to campaigns
         </button>
         <DashCard className="text-center py-10">
@@ -161,7 +161,7 @@ export function BrandCampaignDetailPage({ campaignId, onBack, onEdit, onDuplicat
   return (
     <div className="space-y-6">
       {/* Back button */}
-      <button onClick={onBack} className="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors">
+      <button onClick={onBack} className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
         <ArrowLeft className="w-4 h-4" /> Back to campaigns
       </button>
 
@@ -171,10 +171,10 @@ export function BrandCampaignDetailPage({ campaignId, onBack, onEdit, onDuplicat
           <div className="flex items-start justify-between">
             <div className="space-y-2">
               <div className="flex items-center gap-3">
-                <h1 className="text-xl font-bold text-white">{campaign.title}</h1>
+                <h1 className="text-xl font-bold text-gray-900 dark:text-white">{campaign.title}</h1>
                 <DashBadge variant={statusVariant[campaign.status]}>{statusLabel[campaign.status]}</DashBadge>
               </div>
-              <div className="flex items-center gap-4 text-sm text-gray-400">
+              <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
                 {campaign.platform && (
                   <span className="flex items-center gap-1.5">
                     <Globe className="w-3.5 h-3.5" />
@@ -225,10 +225,10 @@ export function BrandCampaignDetailPage({ campaignId, onBack, onEdit, onDuplicat
           {campaign.objective && <KV label="Objective" value={campaign.objective} />}
           {campaign.campaignType && <KV label="Type" value={campaign.campaignType} />}
           {campaign.description ? (
-            <p className="text-sm text-gray-300 leading-relaxed mt-2">{campaign.description}</p>
+            <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed mt-2">{campaign.description}</p>
           ) : (
             !campaign.objective && !campaign.campaignType && (
-              <p className="text-xs text-gray-600 italic">No description provided.</p>
+              <p className="text-xs text-gray-400 dark:text-gray-600 italic">No description provided.</p>
             )
           )}
         </Section>
@@ -251,15 +251,15 @@ export function BrandCampaignDetailPage({ campaignId, onBack, onEdit, onDuplicat
             <InfoTile label="Remaining" value={String(slots.remaining)} accent="border-cyan-500/20" />
             <InfoTile label="Total" value={String(slots.total)} accent="border-purple-500/20" />
           </div>
-          <div className="relative w-full bg-white/5 rounded-full h-3 overflow-hidden">
+          <div className="relative w-full bg-gray-50 dark:bg-white/5 rounded-full h-3 overflow-hidden">
             <div
               className="h-full bg-gradient-to-r from-emerald-500 to-cyan-400 rounded-full transition-all duration-500"
               style={{ width: `${slotsProgress}%` }}
             />
           </div>
           <div className="flex items-center justify-between mt-2">
-            <p className="text-[11px] text-gray-500">{Math.round(slotsProgress)}% filled</p>
-            <p className="text-[11px] text-gray-500">{slots.remaining} slot{slots.remaining !== 1 ? 's' : ''} remaining</p>
+            <p className="text-[11px] text-gray-400 dark:text-gray-500">{Math.round(slotsProgress)}% filled</p>
+            <p className="text-[11px] text-gray-400 dark:text-gray-500">{slots.remaining} slot{slots.remaining !== 1 ? 's' : ''} remaining</p>
           </div>
         </Section>
 
@@ -279,7 +279,7 @@ export function BrandCampaignDetailPage({ campaignId, onBack, onEdit, onDuplicat
           <Section icon={<Film className="w-4 h-4 text-purple-400" />} title="Deliverables">
             {(() => {
               const d = raw.deliverables as Record<string, number> | null
-              if (!d) return <p className="text-xs text-gray-600 italic">No deliverables specified.</p>
+              if (!d) return <p className="text-xs text-gray-400 dark:text-gray-600 italic">No deliverables specified.</p>
               return (
                 <div className="grid grid-cols-3 gap-3">
                   <DeliverableTile icon={<Clapperboard className="w-5 h-5 text-purple-400" />} label="Reels" count={d.reels ?? 0} />
@@ -298,7 +298,7 @@ export function BrandCampaignDetailPage({ campaignId, onBack, onEdit, onDuplicat
           {has(raw, 'engagementRate') && <KV label="Engagement Rate" value={`${r(raw, 'engagementRate')}%`} />}
           {has(raw, 'contentStyleExpectations') && <KV label="Content Style" value={r(raw, 'contentStyleExpectations')} />}
           {!campaign.preferredNiche && !campaign.minimumFollowers && !has(raw, 'engagementRate') && (
-            <p className="text-xs text-gray-600 italic">No specific requirements set.</p>
+            <p className="text-xs text-gray-400 dark:text-gray-600 italic">No specific requirements set.</p>
           )}
         </Section>
 
@@ -314,30 +314,30 @@ export function BrandCampaignDetailPage({ campaignId, onBack, onEdit, onDuplicat
           {has(raw, 'contentCountPerInfluencer') && <KV label="Content Count" value={`${r(raw, 'contentCountPerInfluencer')} per creator`} />}
           {has(raw, 'handleToTag') && (
             <div className="flex items-center gap-2 mb-2">
-              <AtSign className="w-3.5 h-3.5 text-gray-500" />
-              <span className="text-sm text-gray-300">{r(raw, 'handleToTag')}</span>
+              <AtSign className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500" />
+              <span className="text-sm text-gray-700 dark:text-gray-300">{r(raw, 'handleToTag')}</span>
             </div>
           )}
           {has(raw, 'hashtags') && (
             <div className="flex items-start gap-2 mb-2">
-              <Hash className="w-3.5 h-3.5 text-gray-500 mt-0.5" />
-              <span className="text-sm text-gray-300">{rArr(raw, 'hashtags').join('  ')}</span>
+              <Hash className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500 mt-0.5" />
+              <span className="text-sm text-gray-700 dark:text-gray-300">{rArr(raw, 'hashtags').join('  ')}</span>
             </div>
           )}
           {has(raw, 'mentions') && (
             <div className="flex items-start gap-2 mb-2">
-              <AtSign className="w-3.5 h-3.5 text-gray-500 mt-0.5" />
-              <span className="text-sm text-gray-300">{rArr(raw, 'mentions').join('  ')}</span>
+              <AtSign className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500 mt-0.5" />
+              <span className="text-sm text-gray-700 dark:text-gray-300">{rArr(raw, 'mentions').join('  ')}</span>
             </div>
           )}
           {has(raw, 'captionGuidelines') && (
             <div className="flex items-start gap-2 mb-2">
-              <MessageSquare className="w-3.5 h-3.5 text-gray-500 mt-0.5" />
-              <span className="text-sm text-gray-300">{r(raw, 'captionGuidelines')}</span>
+              <MessageSquare className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500 mt-0.5" />
+              <span className="text-sm text-gray-700 dark:text-gray-300">{r(raw, 'captionGuidelines')}</span>
             </div>
           )}
           {!has(raw, 'postTypes') && !has(raw, 'contentCountPerInfluencer') && !has(raw, 'hashtags') && (
-            <p className="text-xs text-gray-600 italic">No content requirements specified.</p>
+            <p className="text-xs text-gray-400 dark:text-gray-600 italic">No content requirements specified.</p>
           )}
         </Section>
 
@@ -357,7 +357,7 @@ export function BrandCampaignDetailPage({ campaignId, onBack, onEdit, onDuplicat
           <Section icon={<Link2 className="w-4 h-4 text-violet-400" />} title="References & Resources">
             {campaign.referenceVideoUrl && (
               <div className="mb-3">
-                <p className="text-[11px] font-medium text-gray-500 uppercase tracking-wide mb-1.5">Reference Video</p>
+                <p className="text-[11px] font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-1.5">Reference Video</p>
                 <a
                   href={campaign.referenceVideoUrl.match(/^https?:\/\//) ? campaign.referenceVideoUrl : `https://${campaign.referenceVideoUrl}`}
                   target="_blank"
@@ -371,7 +371,7 @@ export function BrandCampaignDetailPage({ campaignId, onBack, onEdit, onDuplicat
             )}
             {campaign.additionalReferenceLinks && campaign.additionalReferenceLinks.length > 0 && (
               <div>
-                <p className="text-[11px] font-medium text-gray-500 uppercase tracking-wide mb-1.5">Additional Links</p>
+                <p className="text-[11px] font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-1.5">Additional Links</p>
                 <ul className="space-y-1.5">
                   {campaign.additionalReferenceLinks.map((link, i) => (
                     <li key={i}>
@@ -401,9 +401,9 @@ export function BrandCampaignDetailPage({ campaignId, onBack, onEdit, onDuplicat
 function Section({ icon, title, children, className = '' }: { icon: React.ReactNode; title: string; children: React.ReactNode; className?: string }) {
   return (
     <DashCard className={`space-y-3 ${className}`}>
-      <div className="flex items-center gap-2.5 pb-3 border-b border-white/5">
+      <div className="flex items-center gap-2.5 pb-3 border-b border-gray-100 dark:border-white/5">
         {icon}
-        <h3 className="text-sm font-semibold text-white">{title}</h3>
+        <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{title}</h3>
       </div>
       <div>{children}</div>
     </DashCard>
@@ -414,7 +414,7 @@ function KV({ label, value }: { label: string; value?: string | null }) {
   if (!value) return null
   return (
     <div className="flex gap-3 mb-2.5 last:mb-0">
-      <span className="text-xs text-gray-500 w-32 shrink-0 pt-0.5">{label}</span>
+      <span className="text-xs text-gray-400 dark:text-gray-500 w-32 shrink-0 pt-0.5">{label}</span>
       <span className="text-sm text-gray-200 flex-1">{value}</span>
     </div>
   )
@@ -422,11 +422,11 @@ function KV({ label, value }: { label: string; value?: string | null }) {
 
 function QuickStat({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
-    <div className="flex items-center gap-2.5 bg-white/[0.04] rounded-lg px-3 py-2.5 border border-white/5">
+    <div className="flex items-center gap-2.5 bg-gray-50 dark:bg-white/[0.04] rounded-lg px-3 py-2.5 border border-gray-100 dark:border-white/5">
       {icon}
       <div>
-        <p className="text-[11px] text-gray-500">{label}</p>
-        <p className="text-sm font-semibold text-white">{value}</p>
+        <p className="text-[11px] text-gray-400 dark:text-gray-500">{label}</p>
+        <p className="text-sm font-semibold text-gray-900 dark:text-white">{value}</p>
       </div>
     </div>
   )
@@ -434,19 +434,19 @@ function QuickStat({ icon, label, value }: { icon: React.ReactNode; label: strin
 
 function InfoTile({ label, value, accent = '' }: { label: string; value: string; accent?: string }) {
   return (
-    <div className={`bg-white/[0.03] border border-white/5 rounded-xl px-3 py-3 text-center ${accent}`}>
-      <p className="text-lg font-bold text-white">{value}</p>
-      <p className="text-[11px] text-gray-500 mt-1">{label}</p>
+    <div className={`bg-gray-50 dark:bg-white/[0.03] border border-gray-100 dark:border-white/5 rounded-xl px-3 py-3 text-center ${accent}`}>
+      <p className="text-lg font-bold text-gray-900 dark:text-white">{value}</p>
+      <p className="text-[11px] text-gray-400 dark:text-gray-500 mt-1">{label}</p>
     </div>
   )
 }
 
 function DeliverableTile({ icon, label, count }: { icon: React.ReactNode; label: string; count: number }) {
   return (
-    <div className="bg-white/[0.03] border border-white/5 rounded-xl px-3 py-4 text-center flex flex-col items-center gap-2">
+    <div className="bg-gray-50 dark:bg-white/[0.03] border border-gray-100 dark:border-white/5 rounded-xl px-3 py-4 text-center flex flex-col items-center gap-2">
       {icon}
-      <p className="text-2xl font-bold text-white">{count}</p>
-      <p className="text-[11px] text-gray-500 font-medium">{label}</p>
+      <p className="text-2xl font-bold text-gray-900 dark:text-white">{count}</p>
+      <p className="text-[11px] text-gray-400 dark:text-gray-500 font-medium">{label}</p>
     </div>
   )
 }
@@ -454,12 +454,12 @@ function DeliverableTile({ icon, label, count }: { icon: React.ReactNode; label:
 function TimelineRow({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
     <div className="flex items-center gap-3">
-      <div className="flex items-center justify-center w-7 h-7 rounded-full bg-white/[0.04] border border-white/10 text-gray-400 shrink-0">
+      <div className="flex items-center justify-center w-7 h-7 rounded-full bg-gray-50 dark:bg-white/[0.04] border border-gray-200 dark:border-white/10 text-gray-500 dark:text-gray-400 shrink-0">
         {icon}
       </div>
       <div className="flex-1 flex items-center justify-between">
-        <span className="text-sm text-gray-400">{label}</span>
-        <span className="text-sm font-medium text-white">{value}</span>
+        <span className="text-sm text-gray-500 dark:text-gray-400">{label}</span>
+        <span className="text-sm font-medium text-gray-900 dark:text-white">{value}</span>
       </div>
     </div>
   )

@@ -190,7 +190,7 @@ export function BrandCampaignsPage() {
   if (error) {
     return (
       <div className="space-y-6">
-        <h1 className="text-xl font-semibold text-white">Campaigns</h1>
+        <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Campaigns</h1>
         <DashCard>
           <p className="text-red-400 text-sm">{error}</p>
           <DashButton className="mt-4" size="sm" onClick={fetchCampaigns}>Retry</DashButton>
@@ -204,8 +204,8 @@ export function BrandCampaignsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-semibold text-white">Campaigns</h1>
-          <p className="text-sm text-gray-400 mt-1">Track and manage all your campaigns.</p>
+          <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Campaigns</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Track and manage all your campaigns.</p>
         </div>
         <div className="flex items-center gap-2">
           <DashButton size="md" onClick={() => setCreating(true)}>
@@ -226,7 +226,7 @@ export function BrandCampaignsPage() {
       </div>
 
       {/* Filter tabs */}
-      <div className="flex items-center gap-1 border-b border-white/5 pb-px">
+      <div className="flex items-center gap-1 border-b border-gray-100 dark:border-white/5 pb-px">
         {(['all', 'active', 'upcoming', 'draft', 'expired'] as FilterTab[]).map((tab) => (
           <button
             key={tab}
@@ -266,9 +266,9 @@ export function BrandCampaignsPage() {
                   {/* Header */}
                   <div className="flex items-start justify-between mb-2 w-full">
                     <div className="min-w-0 flex-1">
-                      <h3 className="text-sm font-semibold text-white truncate">{campaign.title}</h3>
+                      <h3 className="text-sm font-semibold text-gray-900 dark:text-white truncate">{campaign.title}</h3>
                       {campaign.platform && (
-                        <p className="text-[11px] text-gray-500 mt-0.5">{campaign.platform}</p>
+                        <p className="text-[11px] text-gray-400 dark:text-gray-500 mt-0.5">{campaign.platform}</p>
                       )}
                     </div>
                     {isExpired(campaign) ? (
@@ -284,7 +284,7 @@ export function BrandCampaignsPage() {
 
                   {/* Description */}
                   {campaign.description && (
-                    <p className="text-xs text-gray-400 line-clamp-2 mb-2">{campaign.description}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 mb-2">{campaign.description}</p>
                   )}
 
                   {/* Tags */}
@@ -296,7 +296,7 @@ export function BrandCampaignsPage() {
                       </span>
                     )}
                     {campaign.paymentModel && (
-                      <span className="inline-flex items-center gap-1 text-[10px] bg-white/5 text-gray-400 px-2 py-0.5 rounded-full">
+                      <span className="inline-flex items-center gap-1 text-[10px] bg-gray-50 dark:bg-white/5 text-gray-500 dark:text-gray-400 px-2 py-0.5 rounded-full">
                         <PaymentIcon model={campaign.paymentModel} />
                         {campaign.paymentModel}
                       </span>
@@ -305,7 +305,7 @@ export function BrandCampaignsPage() {
 
                   {/* Deliverables */}
                   {deliverables && (
-                    <div className="flex items-center gap-3 mb-2 text-[11px] text-gray-500">
+                    <div className="flex items-center gap-3 mb-2 text-[11px] text-gray-400 dark:text-gray-500">
                       {deliverables.reels > 0 && (
                         <span className="flex items-center gap-1">
                           <Clapperboard className="w-3 h-3 text-purple-400" />
@@ -330,7 +330,7 @@ export function BrandCampaignsPage() {
                   <div className="flex-1" />
 
                   {/* Footer stats */}
-                  <div className="flex items-center gap-3 mt-2 pt-3 border-t border-white/5 text-xs text-gray-500 w-full">
+                  <div className="flex items-center gap-3 mt-2 pt-3 border-t border-gray-100 dark:border-white/5 text-xs text-gray-400 dark:text-gray-500 w-full">
                     <span className="flex items-center gap-1">
                       <Calendar className="w-3.5 h-3.5" />
                       {formatDate(campaign.startDate)}
@@ -339,7 +339,7 @@ export function BrandCampaignsPage() {
                       <Users className="w-3.5 h-3.5" />
                       {campaign.approvedCount}/{campaign.totalSlots}
                     </span>
-                    <span className="ml-auto flex items-center gap-0.5 font-medium text-gray-300">
+                    <span className="ml-auto flex items-center gap-0.5 font-medium text-gray-700 dark:text-gray-300">
                       <IndianRupee className="w-3 h-3" />
                       {campaign.budgetPerCreator != null ? new Intl.NumberFormat('en-IN').format(campaign.budgetPerCreator) : '—'}
                     </span>
@@ -373,8 +373,8 @@ function StatCard({
     <DashCard className={bg}>
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-xs text-gray-400">{label}</p>
-          <p className="text-2xl font-semibold text-white mt-1">{value}</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400">{label}</p>
+          <p className="text-2xl font-semibold text-gray-900 dark:text-white mt-1">{value}</p>
         </div>
         <div className={`p-2 rounded-lg ${color}`}>
           <Icon className="w-4 h-4" />

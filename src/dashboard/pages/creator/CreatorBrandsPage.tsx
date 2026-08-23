@@ -113,7 +113,7 @@ export function CreatorBrandsPage() {
   if (error && brands.length === 0) {
     return (
       <div className="space-y-6">
-        <h1 className="text-xl font-semibold text-white">Discover Brands</h1>
+        <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Discover Brands</h1>
         <DashCard>
           <p className="text-red-400 text-sm">{error}</p>
           <DashButton className="mt-4" size="sm" onClick={() => fetchBrands()}>
@@ -129,8 +129,8 @@ export function CreatorBrandsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-semibold text-white">Discover Brands</h1>
-          <p className="text-sm text-gray-400 mt-1">
+          <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Discover Brands</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
             Find and follow brands to stay updated on new campaigns.
           </p>
         </div>
@@ -142,19 +142,19 @@ export function CreatorBrandsPage() {
       {/* Search & Filter */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500" />
           <input
             type="text"
             value={query}
             onChange={(e) => handleSearchChange(e.target.value)}
             placeholder="Search brands by name..."
-            className="w-full pl-9 pr-3 py-2 rounded-lg border border-white/10 bg-white/5 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/40"
+            className="w-full pl-9 pr-3 py-2 rounded-lg border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/40"
           />
         </div>
         <select
           value={industry}
           onChange={(e) => handleIndustryChange(e.target.value)}
-          className="sm:w-48 px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-purple-500/40"
+          className="sm:w-48 px-3 py-2 rounded-lg border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500/40"
         >
           <option value="">All Industries</option>
           <option value="Beauty">Beauty</option>
@@ -177,7 +177,7 @@ export function CreatorBrandsPage() {
           className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all ${
             activeTab === 'all'
               ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30'
-              : 'bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10'
+              : 'bg-gray-100 dark:bg-white/5 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-white/10 hover:bg-gray-200 dark:hover:bg-white/10'
           }`}
         >
           All
@@ -187,7 +187,7 @@ export function CreatorBrandsPage() {
           className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all ${
             activeTab === 'following'
               ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-              : 'bg-white/5 text-emerald-400 border border-white/10 hover:bg-white/10'
+              : 'bg-gray-100 dark:bg-white/5 text-emerald-400 border border-gray-200 dark:border-white/10 hover:bg-gray-200 dark:hover:bg-white/10'
           }`}
         >
           Following
@@ -215,7 +215,7 @@ export function CreatorBrandsPage() {
       {/* Brand Cards Grid */}
       {filteredBrands.length > 0 && (
         <>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-400 dark:text-gray-500">
             {filteredBrands.length} brand{filteredBrands.length !== 1 ? 's' : ''}{' '}
             {activeTab === 'following' ? 'followed' : 'available'}
           </p>
@@ -232,7 +232,7 @@ export function CreatorBrandsPage() {
                       <img
                         src={brand.logo}
                         alt={brand.name}
-                        className="w-12 h-12 rounded-xl object-cover border border-white/10 shrink-0"
+                        className="w-12 h-12 rounded-xl object-cover border border-gray-200 dark:border-white/10 shrink-0"
                       />
                     ) : (
                       <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-base font-semibold text-white shrink-0">
@@ -240,16 +240,16 @@ export function CreatorBrandsPage() {
                       </div>
                     )}
                     <div className="min-w-0 flex-1">
-                      <h3 className="text-sm font-semibold text-white truncate">
+                      <h3 className="text-sm font-semibold text-gray-900 dark:text-white truncate">
                         {brand.name}
                       </h3>
-                      <p className="text-xs text-gray-500">{brand.industry}</p>
+                      <p className="text-xs text-gray-400 dark:text-gray-500">{brand.industry}</p>
                     </div>
                   </div>
 
                   {/* Description */}
                   {brand.description && (
-                    <p className="text-xs text-gray-400 line-clamp-2 mb-3">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 mb-3">
                       {brand.description}
                     </p>
                   )}
@@ -257,8 +257,8 @@ export function CreatorBrandsPage() {
                   <div className="flex-1" />
 
                   {/* Footer */}
-                  <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
-                    <div className="flex items-center gap-3 text-xs text-gray-500">
+                  <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100 dark:border-white/5">
+                    <div className="flex items-center gap-3 text-xs text-gray-400 dark:text-gray-500">
                       {brand.campaignCount != null && (
                         <span className="flex items-center gap-1">
                           <Megaphone className="w-3.5 h-3.5" />

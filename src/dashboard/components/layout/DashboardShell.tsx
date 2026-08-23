@@ -23,7 +23,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
   const signOutButton = (
     <button
       onClick={handleSignOut}
-      className="flex items-center gap-3 w-full px-3 py-2 rounded-lg text-sm font-medium text-gray-400 hover:bg-white/5 hover:text-white transition-colors"
+      className="flex items-center gap-3 w-full px-3 py-2 rounded-lg text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white transition-colors"
     >
       <LogOut className="w-[18px] h-[18px] shrink-0" />
       Sign out
@@ -32,7 +32,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
 
   return (
     <SearchFilterContext.Provider value={{ query: searchQuery, setQuery: setSearchQuery }}>
-      <div className="min-h-screen bg-dark-900 text-white font-sans">
+      <div className="min-h-screen bg-gray-50 dark:bg-dark-900 text-gray-900 dark:text-white font-sans">
         <SidebarNavigation
           open={sidebarOpen}
           onClose={() => setSidebarOpen(false)}

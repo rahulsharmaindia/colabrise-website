@@ -8,8 +8,8 @@ interface DashButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variants = {
   primary: 'bg-gradient-to-r from-purple-600 to-pink-500 text-white hover:opacity-90 shadow-lg shadow-purple-500/20',
-  secondary: 'bg-white/5 text-gray-300 border border-white/10 hover:bg-white/10 hover:text-white',
-  ghost: 'text-gray-400 hover:text-white hover:bg-white/5',
+  secondary: 'bg-gray-100 dark:bg-white/5 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-white/10 hover:bg-gray-200 dark:hover:bg-white/10 hover:text-gray-900 dark:hover:text-white',
+  ghost: 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5',
 }
 
 const sizes = {

@@ -15,7 +15,7 @@ function NavSectionGroup({ section }: { section: NavSection }) {
   return (
     <div>
       {section.title && (
-        <p className="px-3 mb-1 text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+        <p className="px-3 mb-1 text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">
           {section.title}
         </p>
       )}
@@ -28,8 +28,8 @@ function NavSectionGroup({ section }: { section: NavSection }) {
               className={({ isActive }) =>
                 `flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                   isActive
-                    ? 'bg-purple-500/15 text-purple-300'
-                    : 'text-gray-400 hover:bg-white/5 hover:text-white'
+                    ? 'bg-purple-50 dark:bg-purple-500/15 text-purple-700 dark:text-purple-300'
+                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white'
                 }`
               }
             >
@@ -50,11 +50,11 @@ export function SidebarNavigation({ open, onClose, headerSlot, footerSlot }: Sid
   const content = (
     <div className="flex flex-col h-full">
       {/* Header — Colabrise logo */}
-      <div className="px-4 py-5 border-b border-white/5">
+      <div className="px-4 py-5 border-b border-gray-200 dark:border-white/5">
         {headerSlot ?? (
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-gradient-to-r from-pink-400 to-purple-500" />
-            <span className="text-white font-semibold text-sm">Colabrise</span>
+            <span className="text-gray-900 dark:text-white font-semibold text-sm">Colabrise</span>
           </div>
         )}
       </div>
@@ -68,7 +68,7 @@ export function SidebarNavigation({ open, onClose, headerSlot, footerSlot }: Sid
 
       {/* Footer slot */}
       {footerSlot && (
-        <div className="px-4 py-4 border-t border-white/5">{footerSlot}</div>
+        <div className="px-4 py-4 border-t border-gray-200 dark:border-white/5">{footerSlot}</div>
       )}
     </div>
   )
@@ -76,7 +76,7 @@ export function SidebarNavigation({ open, onClose, headerSlot, footerSlot }: Sid
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="hidden lg:flex lg:flex-col lg:w-60 lg:fixed lg:inset-y-0 border-r border-white/5 bg-dark-800">
+      <aside className="hidden lg:flex lg:flex-col lg:w-60 lg:fixed lg:inset-y-0 border-r border-gray-200 dark:border-white/5 bg-white dark:bg-dark-800">
         {content}
       </aside>
 
@@ -84,10 +84,10 @@ export function SidebarNavigation({ open, onClose, headerSlot, footerSlot }: Sid
       {open && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div className="absolute inset-0 bg-black/60" onClick={onClose} />
-          <aside className="relative w-64 h-full bg-dark-800 shadow-xl">
+          <aside className="relative w-64 h-full bg-white dark:bg-dark-800 shadow-xl">
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 p-1 rounded-md text-gray-500 hover:text-white"
+              className="absolute top-4 right-4 p-1 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-white"
               aria-label="Close sidebar"
             >
               <X className="w-5 h-5" />

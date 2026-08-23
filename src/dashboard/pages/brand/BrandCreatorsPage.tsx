@@ -61,8 +61,8 @@ export function BrandCreatorsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-semibold text-white">Creators</h1>
-          <p className="text-sm text-gray-400 mt-1">Discover and browse creators on the platform.</p>
+          <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Creators</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Discover and browse creators on the platform.</p>
         </div>
         <DashButton variant="ghost" size="sm" onClick={() => fetchCreators()}>
           <RefreshCw className="w-4 h-4" />
@@ -72,13 +72,13 @@ export function BrandCreatorsPage() {
       {/* Search & Filter */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500" />
           <input
             type="text"
             value={query}
             onChange={(e) => handleSearchChange(e.target.value)}
             placeholder="Search by name, username, or bio..."
-            className="w-full pl-9 pr-3 py-2 rounded-lg border border-white/10 bg-white/5 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/40"
+            className="w-full pl-9 pr-3 py-2 rounded-lg border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/40"
           />
         </div>
         <input
@@ -86,7 +86,7 @@ export function BrandCreatorsPage() {
           value={niche}
           onChange={(e) => handleNicheChange(e.target.value)}
           placeholder="Filter by niche..."
-          className="sm:w-48 px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/40"
+          className="sm:w-48 px-3 py-2 rounded-lg border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/40"
         />
       </div>
 
@@ -130,7 +130,7 @@ export function BrandCreatorsPage() {
         )
         return (
         <>
-          <p className="text-xs text-gray-500">{displayed.length} creator{displayed.length !== 1 ? 's' : ''} found</p>
+          <p className="text-xs text-gray-400 dark:text-gray-500">{displayed.length} creator{displayed.length !== 1 ? 's' : ''} found</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {displayed.map((creator) => (
               <DashCard key={creator.id} className="flex flex-col items-center text-center">
@@ -139,20 +139,20 @@ export function BrandCreatorsPage() {
                   <img
                     src={creator.profilePictureUrl}
                     alt={creator.displayName ?? creator.username ?? 'Creator'}
-                    className="w-16 h-16 rounded-full object-cover border-2 border-white/10 mb-3"
+                    className="w-16 h-16 rounded-full object-cover border-2 border-gray-200 dark:border-white/10 mb-3"
                   />
                 ) : (
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-lg font-bold text-white mb-3">
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-lg font-bold text-gray-900 dark:text-white mb-3">
                     {(creator.displayName ?? creator.username ?? 'C')[0]?.toUpperCase()}
                   </div>
                 )}
 
                 {/* Name */}
-                <h3 className="text-sm font-semibold text-white truncate max-w-full">
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-white truncate max-w-full">
                   {creator.displayName ?? creator.username ?? 'Creator'}
                 </h3>
                 {creator.username && (
-                  <p className="text-xs text-gray-500 mt-0.5">@{creator.username}</p>
+                  <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">@{creator.username}</p>
                 )}
 
                 {/* Niche badge */}
@@ -163,13 +163,13 @@ export function BrandCreatorsPage() {
                 )}
 
                 {/* Stats */}
-                <div className="flex items-center gap-4 mt-3 pt-3 border-t border-white/5 w-full justify-center text-xs text-gray-400">
+                <div className="flex items-center gap-4 mt-3 pt-3 border-t border-gray-100 dark:border-white/5 w-full justify-center text-xs text-gray-500 dark:text-gray-400">
                   <div className="text-center">
-                    <p className="font-medium text-white">{formatCount(creator.followerCount)}</p>
+                    <p className="font-medium text-gray-900 dark:text-white">{formatCount(creator.followerCount)}</p>
                     <p>Followers</p>
                   </div>
                   <div className="text-center">
-                    <p className="font-medium text-white">{formatCount(creator.mediaCount)}</p>
+                    <p className="font-medium text-gray-900 dark:text-white">{formatCount(creator.mediaCount)}</p>
                     <p>Posts</p>
                   </div>
                 </div>

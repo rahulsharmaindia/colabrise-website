@@ -147,37 +147,37 @@ function ApplyModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative w-full max-w-md rounded-xl border border-white/10 bg-dark-800 p-6 shadow-2xl">
+      <div className="relative w-full max-w-md rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-dark-800 p-6 shadow-2xl">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-base font-semibold text-white">Apply for Campaign</h3>
-          <button onClick={onClose} className="text-gray-400 hover:text-white transition-colors" aria-label="Close">
+          <h3 className="text-base font-semibold text-gray-900 dark:text-white">Apply for Campaign</h3>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors" aria-label="Close">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         <div className="mb-5">
-          <p className="text-sm text-white font-medium">{campaign.title}</p>
+          <p className="text-sm text-gray-900 dark:text-white font-medium">{campaign.title}</p>
           {campaign.brandName && (
-            <p className="text-xs text-gray-500 mt-0.5">by {campaign.brandName}</p>
+            <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">by {campaign.brandName}</p>
           )}
           {campaign.description && (
-            <p className="text-xs text-gray-400 mt-2 line-clamp-3">{campaign.description}</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 line-clamp-3">{campaign.description}</p>
           )}
         </div>
 
         {/* Campaign quick info */}
-        <div className="grid grid-cols-3 gap-3 mb-5 p-3 rounded-lg bg-white/5 border border-white/5">
+        <div className="grid grid-cols-3 gap-3 mb-5 p-3 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/5">
           <div className="text-center">
-            <p className="text-sm font-semibold text-white">{formatBudget(campaign.budgetPerCreator)}</p>
-            <p className="text-[10px] text-gray-500">Per Creator</p>
+            <p className="text-sm font-semibold text-gray-900 dark:text-white">{formatBudget(campaign.budgetPerCreator)}</p>
+            <p className="text-[10px] text-gray-400 dark:text-gray-500">Per Creator</p>
           </div>
           <div className="text-center">
-            <p className="text-sm font-semibold text-white">{campaign.totalSlots - campaign.approvedCount}</p>
-            <p className="text-[10px] text-gray-500">Slots Left</p>
+            <p className="text-sm font-semibold text-gray-900 dark:text-white">{campaign.totalSlots - campaign.approvedCount}</p>
+            <p className="text-[10px] text-gray-400 dark:text-gray-500">Slots Left</p>
           </div>
           <div className="text-center">
-            <p className="text-sm font-semibold text-white">{formatDate(campaign.applicationDeadline)}</p>
-            <p className="text-[10px] text-gray-500">Deadline</p>
+            <p className="text-sm font-semibold text-gray-900 dark:text-white">{formatDate(campaign.applicationDeadline)}</p>
+            <p className="text-[10px] text-gray-400 dark:text-gray-500">Deadline</p>
           </div>
         </div>
 
@@ -197,7 +197,7 @@ function ApplyModal({
           </DashButton>
         </div>
 
-        <p className="text-[10px] text-gray-600 mt-3 text-center">
+        <p className="text-[10px] text-gray-400 dark:text-gray-600 mt-3 text-center">
           Your profile will be shared with the brand for review.
         </p>
       </div>
@@ -267,16 +267,16 @@ function SubmitContentModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative w-full max-w-md rounded-xl border border-white/10 bg-dark-800 p-6 shadow-2xl my-8">
+      <div className="relative w-full max-w-md rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-dark-800 p-6 shadow-2xl my-8">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-base font-semibold text-white">Submit Content</h3>
-          <button onClick={onClose} className="text-gray-400 hover:text-white transition-colors" aria-label="Close">
+          <h3 className="text-base font-semibold text-gray-900 dark:text-white">Submit Content</h3>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors" aria-label="Close">
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <p className="text-sm text-gray-400 mb-4">
-          Campaign: <span className="text-white font-medium">{campaign.title}</span>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+          Campaign: <span className="text-gray-900 dark:text-white font-medium">{campaign.title}</span>
         </p>
 
         {error && (
@@ -288,7 +288,7 @@ function SubmitContentModal({
         <div className="space-y-4">
           {/* Content URL */}
           <div>
-            <label className="block text-xs font-medium text-gray-400 mb-1.5">
+            <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">
               Instagram Post URL *
             </label>
             <input
@@ -296,14 +296,14 @@ function SubmitContentModal({
               value={contentUrl}
               onChange={(e) => setContentUrl(e.target.value)}
               placeholder="https://instagram.com/reel/..."
-              className="w-full px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/40"
+              className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/40"
             />
-            <p className="text-[10px] text-gray-600 mt-1">Must be a public Instagram post/reel URL</p>
+            <p className="text-[10px] text-gray-400 dark:text-gray-600 mt-1">Must be a public Instagram post/reel URL</p>
           </div>
 
           {/* Caption */}
           <div>
-            <label className="block text-xs font-medium text-gray-400 mb-1.5">
+            <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">
               Post Caption *
             </label>
             <textarea
@@ -312,14 +312,14 @@ function SubmitContentModal({
               placeholder="Paste the exact caption you used on your post..."
               rows={4}
               maxLength={2200}
-              className="w-full px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/40 resize-none"
+              className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/40 resize-none"
             />
-            <p className="text-[10px] text-gray-600 mt-1">{caption.length}/2200</p>
+            <p className="text-[10px] text-gray-400 dark:text-gray-600 mt-1">{caption.length}/2200</p>
           </div>
 
           {/* Notes to brand */}
           <div>
-            <label className="block text-xs font-medium text-gray-400 mb-1.5">
+            <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">
               Notes to Brand (optional)
             </label>
             <textarea
@@ -328,9 +328,9 @@ function SubmitContentModal({
               placeholder="Any additional context for the brand..."
               rows={2}
               maxLength={1000}
-              className="w-full px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/40 resize-none"
+              className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/40 resize-none"
             />
-            <p className="text-[10px] text-gray-600 mt-1">{notes.length}/1000</p>
+            <p className="text-[10px] text-gray-400 dark:text-gray-600 mt-1">{notes.length}/1000</p>
           </div>
         </div>
 
@@ -445,8 +445,8 @@ export function CreatorCampaignsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-semibold text-white">Campaigns</h1>
-          <p className="text-sm text-gray-400 mt-1">Discover campaigns and collaborate with brands.</p>
+          <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Campaigns</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Discover campaigns and collaborate with brands.</p>
         </div>
         <DashButton variant="ghost" size="sm" onClick={() => fetchCampaigns()}>
           <RefreshCw className="w-4 h-4" />
@@ -466,8 +466,8 @@ export function CreatorCampaignsPage() {
         <DashCard className="!p-4">
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-xs text-gray-400">Completed</p>
-              <p className="text-2xl font-semibold text-white mt-1">{statsLoading ? '—' : stats.completed}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Completed</p>
+              <p className="text-2xl font-semibold text-gray-900 dark:text-white mt-1">{statsLoading ? '—' : stats.completed}</p>
             </div>
             <div className="p-2 rounded-lg bg-emerald-500/15 text-emerald-400">
               <CheckCircle2 className="w-4 h-4" />
@@ -477,8 +477,8 @@ export function CreatorCampaignsPage() {
         <DashCard className="!p-4">
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-xs text-gray-400">Active</p>
-              <p className="text-2xl font-semibold text-white mt-1">{statsLoading ? '—' : stats.active}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Active</p>
+              <p className="text-2xl font-semibold text-gray-900 dark:text-white mt-1">{statsLoading ? '—' : stats.active}</p>
             </div>
             <div className="p-2 rounded-lg bg-blue-500/15 text-blue-400">
               <Megaphone className="w-4 h-4" />
@@ -488,8 +488,8 @@ export function CreatorCampaignsPage() {
         <DashCard className="!p-4">
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-xs text-gray-400">Applied</p>
-              <p className="text-2xl font-semibold text-white mt-1">{statsLoading ? '—' : stats.applied}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Applied</p>
+              <p className="text-2xl font-semibold text-gray-900 dark:text-white mt-1">{statsLoading ? '—' : stats.applied}</p>
             </div>
             <div className="p-2 rounded-lg bg-amber-500/15 text-amber-400">
               <Clock className="w-4 h-4" />
@@ -499,8 +499,8 @@ export function CreatorCampaignsPage() {
         <DashCard className="!p-4">
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-xs text-gray-400">Rejected</p>
-              <p className="text-2xl font-semibold text-white mt-1">{statsLoading ? '—' : stats.rejected}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Rejected</p>
+              <p className="text-2xl font-semibold text-gray-900 dark:text-white mt-1">{statsLoading ? '—' : stats.rejected}</p>
             </div>
             <div className="p-2 rounded-lg bg-red-500/15 text-red-400">
               <XCircle className="w-4 h-4" />
@@ -511,18 +511,18 @@ export function CreatorCampaignsPage() {
 
       {/* Search */}
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500" />
         <input
           type="text"
           value={search}
           onChange={(e) => handleSearchChange(e.target.value)}
           placeholder="Search campaigns by name, brand, or niche..."
-          className="w-full pl-9 pr-3 py-2 rounded-lg border border-white/10 bg-white/5 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/40"
+          className="w-full pl-9 pr-3 py-2 rounded-lg border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/40"
         />
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex items-center gap-1 border-b border-white/5 pb-px overflow-x-auto">
+      <div className="flex items-center gap-1 border-b border-gray-100 dark:border-white/5 pb-px overflow-x-auto">
         {FILTER_TABS.map((tab) => (
           <button
             key={tab.key}
@@ -571,7 +571,7 @@ export function CreatorCampaignsPage() {
       {/* Campaign Grid */}
       {!loading && !error && campaigns.length > 0 && (
         <>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-400 dark:text-gray-500">
             {campaigns.length} campaign{campaigns.length !== 1 ? 's' : ''}
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -595,13 +595,13 @@ export function CreatorCampaignsPage() {
                   >
                     <div className="flex items-start justify-between mb-2">
                       <div className="min-w-0 flex-1">
-                        <h3 className="text-sm font-semibold text-white truncate">{campaign.title}</h3>
+                        <h3 className="text-sm font-semibold text-gray-900 dark:text-white truncate">{campaign.title}</h3>
                         <div className="flex items-center gap-2 mt-0.5">
                           {campaign.brandName && (
-                            <p className="text-[11px] text-gray-500">by {campaign.brandName}</p>
+                            <p className="text-[11px] text-gray-400 dark:text-gray-500">by {campaign.brandName}</p>
                           )}
                           {platform && (
-                            <span className="text-[10px] text-gray-600">• {platform}</span>
+                            <span className="text-[10px] text-gray-400 dark:text-gray-600">• {platform}</span>
                           )}
                         </div>
                       </div>
@@ -612,7 +612,7 @@ export function CreatorCampaignsPage() {
 
                   {/* Description */}
                   {campaign.description && (
-                    <p className="text-xs text-gray-400 line-clamp-2 mb-2">{campaign.description}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 mb-2">{campaign.description}</p>
                   )}
 
                   {/* Tags: niche + payment model */}
@@ -624,7 +624,7 @@ export function CreatorCampaignsPage() {
                       </span>
                     )}
                     {paymentModel && (
-                      <span className="inline-flex items-center gap-1 text-[10px] bg-white/5 text-gray-400 px-2 py-0.5 rounded-full">
+                      <span className="inline-flex items-center gap-1 text-[10px] bg-gray-50 dark:bg-white/5 text-gray-500 dark:text-gray-400 px-2 py-0.5 rounded-full">
                         <PaymentIcon model={paymentModel} />
                         {paymentModel}
                       </span>
@@ -633,7 +633,7 @@ export function CreatorCampaignsPage() {
 
                   {/* Deliverables */}
                   {deliverables && (
-                    <div className="flex items-center gap-3 mb-2 text-[11px] text-gray-500">
+                    <div className="flex items-center gap-3 mb-2 text-[11px] text-gray-400 dark:text-gray-500">
                       {deliverables.reels > 0 && (
                         <span className="flex items-center gap-1">
                           <Clapperboard className="w-3 h-3 text-purple-400" />
@@ -658,7 +658,7 @@ export function CreatorCampaignsPage() {
                   <div className="flex-1" />
 
                   {/* Footer stats */}
-                  <div className="flex items-center gap-3 mt-2 pt-3 border-t border-white/5 text-xs text-gray-500">
+                  <div className="flex items-center gap-3 mt-2 pt-3 border-t border-gray-100 dark:border-white/5 text-xs text-gray-400 dark:text-gray-500">
                     <span className="flex items-center gap-1">
                       <Calendar className="w-3.5 h-3.5" />
                       {formatDate(campaign.applicationDeadline ?? campaign.startDate)}
@@ -667,7 +667,7 @@ export function CreatorCampaignsPage() {
                       <Users className="w-3.5 h-3.5" />
                       {campaign.approvedCount}/{campaign.totalSlots}
                     </span>
-                    <span className="ml-auto flex items-center gap-0.5 font-medium text-gray-300">
+                    <span className="ml-auto flex items-center gap-0.5 font-medium text-gray-700 dark:text-gray-300">
                       <IndianRupee className="w-3 h-3" />
                       {formatBudget(campaign.budgetPerCreator)}
                     </span>
@@ -675,7 +675,7 @@ export function CreatorCampaignsPage() {
                   </div>{/* end clickable area */}
 
                   {/* Action Button — Always visible */}
-                  <div className="mt-3 pt-3 border-t border-white/5">
+                  <div className="mt-3 pt-3 border-t border-gray-100 dark:border-white/5">
                     {campaign.applicationStatus === 'approved' ? (
                       <DashButton
                         variant="primary"
@@ -697,8 +697,8 @@ export function CreatorCampaignsPage() {
                         <span className="text-xs font-medium text-red-400">Application Rejected</span>
                       </div>
                     ) : slotsAvailable <= 0 ? (
-                      <div className="flex items-center justify-center gap-2 py-1.5 rounded-lg bg-white/5 border border-white/10">
-                        <span className="text-xs font-medium text-gray-500">No Slots Available</span>
+                      <div className="flex items-center justify-center gap-2 py-1.5 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10">
+                        <span className="text-xs font-medium text-gray-400 dark:text-gray-500">No Slots Available</span>
                       </div>
                     ) : (campaign.status === 'active' || campaign.status === 'published') ? (
                       <DashButton

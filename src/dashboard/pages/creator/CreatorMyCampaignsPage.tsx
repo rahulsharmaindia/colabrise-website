@@ -63,7 +63,7 @@ export function CreatorMyCampaignsPage() {
   if (error) {
     return (
       <div className="space-y-6">
-        <h1 className="text-xl font-semibold text-white">My Campaigns</h1>
+        <h1 className="text-xl font-semibold text-gray-900 dark:text-white">My Campaigns</h1>
         <DashCard>
           <p className="text-red-400 text-sm">{error}</p>
           <DashButton className="mt-4" size="sm" onClick={fetchMyCampaigns}>
@@ -78,8 +78,8 @@ export function CreatorMyCampaignsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-semibold text-white">My Campaigns</h1>
-          <p className="text-sm text-gray-400 mt-1">Campaigns you've applied to or are collaborating on.</p>
+          <h1 className="text-xl font-semibold text-gray-900 dark:text-white">My Campaigns</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Campaigns you've applied to or are collaborating on.</p>
         </div>
         <DashButton variant="ghost" size="sm" onClick={fetchMyCampaigns}>
           <RefreshCw className="w-4 h-4" />
@@ -98,9 +98,9 @@ export function CreatorMyCampaignsPage() {
             <DashCard key={campaign.campaignId} className="flex flex-col">
               <div className="flex items-start justify-between mb-2">
                 <div className="min-w-0 flex-1">
-                  <h3 className="text-sm font-semibold text-white truncate">{campaign.title}</h3>
+                  <h3 className="text-sm font-semibold text-gray-900 dark:text-white truncate">{campaign.title}</h3>
                   {campaign.brandName && (
-                    <p className="text-xs text-gray-500 mt-0.5">by {campaign.brandName}</p>
+                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">by {campaign.brandName}</p>
                   )}
                 </div>
                 {campaign.applicationStatus && (
@@ -112,7 +112,7 @@ export function CreatorMyCampaignsPage() {
 
               <div className="flex-1" />
 
-              <div className="flex items-center gap-4 mt-3 pt-3 border-t border-white/5 text-xs text-gray-500">
+              <div className="flex items-center gap-4 mt-3 pt-3 border-t border-gray-100 dark:border-white/5 text-xs text-gray-400 dark:text-gray-500">
                 <span className="flex items-center gap-1">
                   <Calendar className="w-3.5 h-3.5" />
                   {formatDate(campaign.startDate)}

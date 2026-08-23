@@ -276,10 +276,10 @@ export function CampaignFormPage({ onBack, editingCampaignId, initialData }: Cam
         <div className="w-16 h-16 rounded-full bg-emerald-500/15 flex items-center justify-center">
           <CheckCircle2 className="w-8 h-8 text-emerald-400" />
         </div>
-        <h2 className="text-lg font-semibold text-white">
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
           {isEdit ? 'Campaign updated!' : 'Campaign created!'}
         </h2>
-        <p className="text-sm text-gray-400">Your campaign has been saved successfully.</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400">Your campaign has been saved successfully.</p>
         <DashButton onClick={onBack} className="mt-2">Back to Campaigns</DashButton>
       </div>
     )
@@ -289,7 +289,7 @@ export function CampaignFormPage({ onBack, editingCampaignId, initialData }: Cam
     <div className="space-y-6 max-w-4xl">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <button onClick={onBack} className="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors">
+        <button onClick={onBack} className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
           <ArrowLeft className="w-4 h-4" /> Back to campaigns
         </button>
         <DashButton variant="secondary" size="sm" onClick={() => submit('Draft')} disabled={saving}>
@@ -298,7 +298,7 @@ export function CampaignFormPage({ onBack, editingCampaignId, initialData }: Cam
         </DashButton>
       </div>
 
-      <h1 className="text-xl font-semibold text-white">
+      <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
         {isEdit ? 'Edit Campaign' : 'Create Campaign'}
       </h1>
 
@@ -410,14 +410,14 @@ type StepProps = { form: CampaignFormData; set: <K extends keyof CampaignFormDat
 function Step1({ form, set, errors }: StepProps) {
   return (
     <div className="space-y-4">
-      <h3 className="text-sm font-semibold text-white">Campaign Details</h3>
+      <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Campaign Details</h3>
       <Field label="Title *" value={form.title} onChange={(v) => set('title', v)} error={errors.title} placeholder="Give your campaign a catchy name" />
       <Select label="Objective *" value={form.objective} onChange={(v) => set('objective', v)} options={OBJECTIVES} error={errors.objective} />
       <Select label="Campaign Type *" value={form.campaignType} onChange={(v) => set('campaignType', v)} options={CAMPAIGN_TYPES} error={errors.campaignType} />
       <Field label="Platform" value={form.platform} onChange={(v) => set('platform', v)} placeholder="Instagram" />
       <Field label="Description *" value={form.description} onChange={(v) => set('description', v)} error={errors.description} multiline placeholder="Describe what this campaign is about..." />
       <div>
-        <p className="text-xs font-medium text-gray-400 mb-2">Deliverables</p>
+        <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">Deliverables</p>
         <div className="grid grid-cols-3 gap-3">
           <NumberStepper label="Reels" value={form.deliverables.reels} onChange={(v) => set('deliverables', { ...form.deliverables, reels: v })} />
           <NumberStepper label="Stories" value={form.deliverables.stories} onChange={(v) => set('deliverables', { ...form.deliverables, stories: v })} />
@@ -435,12 +435,12 @@ function Step2({ form, set }: StepProps) {
   }
   return (
     <div className="space-y-4">
-      <h3 className="text-sm font-semibold text-white">Content Requirements</h3>
+      <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Content Requirements</h3>
       <div>
-        <p className="text-xs font-medium text-gray-400 mb-2">Post Types</p>
+        <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">Post Types</p>
         <div className="flex flex-wrap gap-2">
           {POST_TYPES.map((t) => (
-            <button key={t} onClick={() => toggle(t)} className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${form.postTypes.includes(t) ? 'bg-purple-500/15 border-purple-500/40 text-purple-300' : 'bg-white/5 border-white/10 text-gray-400 hover:text-white'}`}>{t}</button>
+            <button key={t} onClick={() => toggle(t)} className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${form.postTypes.includes(t) ? 'bg-purple-500/15 border-purple-500/40 text-purple-300' : 'bg-gray-100 dark:bg-white/5 border-gray-200 dark:border-white/10 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'}`}>{t}</button>
           ))}
         </div>
       </div>
@@ -458,7 +458,7 @@ function Step2({ form, set }: StepProps) {
 function Step3({ form, set, errors }: StepProps) {
   return (
     <div className="space-y-4">
-      <h3 className="text-sm font-semibold text-white">Target Audience</h3>
+      <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Target Audience</h3>
       <div className="grid grid-cols-2 gap-4">
         <Field label="Min Age *" value={form.ageGroupMin} onChange={(v) => set('ageGroupMin', v)} type="number" error={errors.ageGroupMin} placeholder="13" />
         <Field label="Max Age *" value={form.ageGroupMax} onChange={(v) => set('ageGroupMax', v)} type="number" error={errors.ageGroupMax} placeholder="65" />
@@ -474,7 +474,7 @@ function Step3({ form, set, errors }: StepProps) {
 function Step4({ form, set, errors }: StepProps) {
   return (
     <div className="space-y-4">
-      <h3 className="text-sm font-semibold text-white">Budget & Payment</h3>
+      <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Budget & Payment</h3>
       <div className="grid grid-cols-2 gap-4">
         <Field label="Budget Per Creator (₹) *" value={form.budgetPerCreator} onChange={(v) => set('budgetPerCreator', v)} type="number" error={errors.budgetPerCreator} />
         <Field label="Total Budget (₹) *" value={form.totalBudget} onChange={(v) => set('totalBudget', v)} type="number" error={errors.totalBudget} />
@@ -495,7 +495,7 @@ function Step4({ form, set, errors }: StepProps) {
 function Step5({ form, set, errors }: StepProps) {
   return (
     <div className="space-y-4">
-      <h3 className="text-sm font-semibold text-white">Timeline</h3>
+      <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Timeline</h3>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <Field label="Start Date *" value={form.startDate} onChange={(v) => set('startDate', v)} type="date" error={errors.startDate} />
         <Field label="End Date *" value={form.endDate} onChange={(v) => set('endDate', v)} type="date" error={errors.endDate} />
@@ -517,7 +517,7 @@ function Step5({ form, set, errors }: StepProps) {
 function Step6({ form, set, errors }: StepProps) {
   return (
     <div className="space-y-4">
-      <h3 className="text-sm font-semibold text-white">Creator Requirements & Slots</h3>
+      <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Creator Requirements & Slots</h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Field label="Minimum Followers *" value={form.minimumFollowers} onChange={(v) => set('minimumFollowers', v)} type="number" error={errors.minimumFollowers} placeholder="e.g. 10000" />
         <Field label="Engagement Rate (%)" value={form.requiredEngagementRate} onChange={(v) => set('requiredEngagementRate', v)} type="number" placeholder="e.g. 3.5" />
@@ -535,7 +535,7 @@ function Step6({ form, set, errors }: StepProps) {
 function Step7({ form, set }: StepProps) {
   return (
     <div className="space-y-4">
-      <h3 className="text-sm font-semibold text-white">Guidelines & Approval</h3>
+      <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Guidelines & Approval</h3>
       <Field label="Do's" value={form.guidelinesDos} onChange={(v) => set('guidelinesDos', v)} multiline placeholder="List what creators should do..." />
       <Field label="Don'ts" value={form.guidelinesDonts} onChange={(v) => set('guidelinesDonts', v)} multiline placeholder="List what creators should avoid..." />
       <Field label="Brand Messaging" value={form.brandMessaging} onChange={(v) => set('brandMessaging', v)} multiline placeholder="Key messages to communicate..." />
@@ -546,7 +546,7 @@ function Step7({ form, set }: StepProps) {
         >
           <span className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${form.requireApproval ? 'left-5' : 'left-1'}`} />
         </button>
-        <span className="text-sm text-gray-300">Require content approval before posting</span>
+        <span className="text-sm text-gray-700 dark:text-gray-300">Require content approval before posting</span>
       </div>
     </div>
   )
@@ -557,10 +557,10 @@ function Step7({ form, set }: StepProps) {
 function Field({ label, value, onChange, error, placeholder, type = 'text', multiline = false }: {
   label: string; value: string; onChange: (v: string) => void; error?: string; placeholder?: string; type?: string; multiline?: boolean
 }) {
-  const cls = `w-full rounded-lg border ${error ? 'border-red-500/50' : 'border-white/10'} bg-white/[0.03] px-3.5 py-2.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500/40 transition-all`
+  const cls = `w-full rounded-lg border ${error ? 'border-red-500/50' : 'border-gray-200 dark:border-white/10'} bg-gray-50 dark:bg-white/[0.03] px-3.5 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500/40 transition-all`
   return (
     <div>
-      <label className="block text-xs font-medium text-gray-400 mb-1.5">{label}</label>
+      <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">{label}</label>
       {multiline ? (
         <textarea value={value} onChange={(e) => onChange(e.target.value)} rows={3} className={`${cls} resize-none`} placeholder={placeholder} />
       ) : (
@@ -576,11 +576,11 @@ function Select({ label, value, onChange, options, error }: {
 }) {
   return (
     <div>
-      <label className="block text-xs font-medium text-gray-400 mb-1.5">{label}</label>
+      <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">{label}</label>
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className={`w-full rounded-lg border ${error ? 'border-red-500/50' : 'border-white/10'} bg-white/[0.03] px-3.5 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-purple-500/40 [&>option]:bg-gray-900`}
+        className={`w-full rounded-lg border ${error ? 'border-red-500/50' : 'border-gray-200 dark:border-white/10'} bg-gray-50 dark:bg-white/[0.03] px-3.5 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500/40 [[&>option]:bg-gray-900>option]:bg-white dark:[[&>option]:bg-gray-900>option]:bg-gray-900`}
       >
         <option value="">Select...</option>
         {options.map((o) => <option key={o} value={o}>{o}</option>)}
@@ -592,11 +592,11 @@ function Select({ label, value, onChange, options, error }: {
 
 function NumberStepper({ label, value, onChange }: { label: string; value: number; onChange: (v: number) => void }) {
   return (
-    <div className="bg-white/[0.03] border border-white/10 rounded-lg px-3 py-2.5 text-center">
-      <p className="text-[11px] text-gray-500 mb-2">{label}</p>
+    <div className="bg-gray-50 dark:bg-white/[0.03] border border-gray-200 dark:border-white/10 rounded-lg px-3 py-2.5 text-center">
+      <p className="text-[11px] text-gray-400 dark:text-gray-500 mb-2">{label}</p>
       <div className="flex items-center justify-center gap-3">
-        <button onClick={() => onChange(Math.max(0, value - 1))} className="w-7 h-7 rounded-full bg-white/5 border border-white/10 text-white flex items-center justify-center hover:bg-white/10">−</button>
-        <span className="text-lg font-bold text-white w-6 text-center">{value}</span>
+        <button onClick={() => onChange(Math.max(0, value - 1))} className="w-7 h-7 rounded-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white flex items-center justify-center hover:bg-gray-200 dark:hover:bg-white/10">−</button>
+        <span className="text-lg font-bold text-gray-900 dark:text-white w-6 text-center">{value}</span>
         <button onClick={() => onChange(value + 1)} className="w-7 h-7 rounded-full bg-purple-500/20 border border-purple-500/30 text-purple-300 flex items-center justify-center hover:bg-purple-500/30">+</button>
       </div>
     </div>

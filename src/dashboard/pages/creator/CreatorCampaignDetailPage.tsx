@@ -155,10 +155,10 @@ function SubmitContentModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative w-full max-w-md rounded-xl border border-white/10 bg-dark-800 p-6 shadow-2xl my-8">
+      <div className="relative w-full max-w-md rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-dark-800 p-6 shadow-2xl my-8">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-base font-semibold text-white">Submit Content</h3>
-          <button onClick={onClose} className="text-gray-400 hover:text-white" aria-label="Close">
+          <h3 className="text-base font-semibold text-gray-900 dark:text-white">Submit Content</h3>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-900 dark:hover:text-white" aria-label="Close">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -171,36 +171,36 @@ function SubmitContentModal({
 
         <div className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-gray-400 mb-1.5">Instagram Post URL *</label>
+            <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Instagram Post URL *</label>
             <input
               type="url"
               value={contentUrl}
               onChange={(e) => setContentUrl(e.target.value)}
               placeholder="https://instagram.com/reel/..."
-              className="w-full px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/40"
+              className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/40"
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-400 mb-1.5">Post Caption *</label>
+            <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Post Caption *</label>
             <textarea
               value={caption}
               onChange={(e) => setCaption(e.target.value)}
               placeholder="Paste the exact caption you used..."
               rows={4}
               maxLength={2200}
-              className="w-full px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/40 resize-none"
+              className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/40 resize-none"
             />
-            <p className="text-[10px] text-gray-600 mt-1">{caption.length}/2200</p>
+            <p className="text-[10px] text-gray-400 dark:text-gray-600 mt-1">{caption.length}/2200</p>
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-400 mb-1.5">Notes to Brand (optional)</label>
+            <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">Notes to Brand (optional)</label>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Any additional context..."
               rows={2}
               maxLength={1000}
-              className="w-full px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/40 resize-none"
+              className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/40 resize-none"
             />
           </div>
         </div>
@@ -279,7 +279,7 @@ export function CreatorCampaignDetailPage({ campaign, onBack }: CreatorCampaignD
   return (
     <div className="space-y-6">
       {/* Back button */}
-      <button onClick={onBack} className="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors">
+      <button onClick={onBack} className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
         <ArrowLeft className="w-4 h-4" /> Back to campaigns
       </button>
 
@@ -297,12 +297,12 @@ export function CreatorCampaignDetailPage({ campaign, onBack }: CreatorCampaignD
           <div className="flex items-start justify-between">
             <div className="space-y-2 flex-1 min-w-0">
               <div className="flex items-center gap-3 flex-wrap">
-                <h1 className="text-xl font-bold text-white">{campaign.title}</h1>
+                <h1 className="text-xl font-bold text-gray-900 dark:text-white">{campaign.title}</h1>
                 <DashBadge variant={statusVariant[campaign.status] ?? 'default'}>{campaign.status}</DashBadge>
               </div>
-              <div className="flex items-center gap-4 text-sm text-gray-400 flex-wrap">
+              <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 flex-wrap">
                 {campaign.brandName && (
-                  <span className="font-medium text-gray-300">by {campaign.brandName}</span>
+                  <span className="font-medium text-gray-700 dark:text-gray-300">by {campaign.brandName}</span>
                 )}
                 {campaign.platform && (
                   <span className="flex items-center gap-1.5">
@@ -344,7 +344,7 @@ export function CreatorCampaignDetailPage({ campaign, onBack }: CreatorCampaignD
               </div>
               <div>
                 <p className="text-sm font-medium text-emerald-400">Application Approved</p>
-                <p className="text-[11px] text-gray-500">You can now submit your content for this campaign.</p>
+                <p className="text-[11px] text-gray-400 dark:text-gray-500">You can now submit your content for this campaign.</p>
               </div>
             </div>
             <DashButton
@@ -363,7 +363,7 @@ export function CreatorCampaignDetailPage({ campaign, onBack }: CreatorCampaignD
             </div>
             <div>
               <p className="text-sm font-medium text-amber-400">Application Pending</p>
-              <p className="text-[11px] text-gray-500">The brand is reviewing your profile.</p>
+              <p className="text-[11px] text-gray-400 dark:text-gray-500">The brand is reviewing your profile.</p>
             </div>
           </div>
         ) : applicationStatus === 'rejected' ? (
@@ -373,12 +373,12 @@ export function CreatorCampaignDetailPage({ campaign, onBack }: CreatorCampaignD
             </div>
             <div>
               <p className="text-sm font-medium text-red-400">Application Rejected</p>
-              <p className="text-[11px] text-gray-500">Unfortunately the brand has not approved your application.</p>
+              <p className="text-[11px] text-gray-400 dark:text-gray-500">Unfortunately the brand has not approved your application.</p>
             </div>
           </div>
         ) : (campaignStatus === 'completed' || campaignStatus === 'cancelled' || campaignStatus === 'archived') ? (
           <div className="flex items-center justify-center py-2">
-            <p className="text-sm text-gray-500">This campaign is no longer accepting applications.</p>
+            <p className="text-sm text-gray-400 dark:text-gray-500">This campaign is no longer accepting applications.</p>
           </div>
         ) : (
           /* Default: show Apply button */
@@ -397,7 +397,7 @@ export function CreatorCampaignDetailPage({ campaign, onBack }: CreatorCampaignD
               {applying ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
               {applying ? 'Applying...' : 'Apply to Campaign'}
             </DashButton>
-            <p className="text-[11px] text-gray-500 text-center">
+            <p className="text-[11px] text-gray-400 dark:text-gray-500 text-center">
               Your profile will be shared with the brand for review.
             </p>
           </div>
@@ -411,10 +411,10 @@ export function CreatorCampaignDetailPage({ campaign, onBack }: CreatorCampaignD
           {campaign.objective && <KV label="Objective" value={campaign.objective} />}
           {campaign.campaignType && <KV label="Type" value={campaign.campaignType} />}
           {campaign.description ? (
-            <p className="text-sm text-gray-300 leading-relaxed mt-2">{campaign.description}</p>
+            <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed mt-2">{campaign.description}</p>
           ) : (
             !campaign.objective && !campaign.campaignType && (
-              <p className="text-xs text-gray-600 italic">No description provided.</p>
+              <p className="text-xs text-gray-400 dark:text-gray-600 italic">No description provided.</p>
             )
           )}
         </Section>
@@ -436,13 +436,13 @@ export function CreatorCampaignDetailPage({ campaign, onBack }: CreatorCampaignD
             <InfoTile label="Remaining" value={String(slots.remaining)} accent="border-cyan-500/20" />
             <InfoTile label="Total" value={String(slots.total)} accent="border-purple-500/20" />
           </div>
-          <div className="relative w-full bg-white/5 rounded-full h-3 overflow-hidden">
+          <div className="relative w-full bg-gray-50 dark:bg-white/5 rounded-full h-3 overflow-hidden">
             <div
               className="h-full bg-gradient-to-r from-emerald-500 to-cyan-400 rounded-full transition-all"
               style={{ width: `${slotsProgress}%` }}
             />
           </div>
-          <p className="text-[11px] text-gray-500 mt-2">{Math.round(slotsProgress)}% filled • {slots.remaining} slot{slots.remaining !== 1 ? 's' : ''} remaining</p>
+          <p className="text-[11px] text-gray-400 dark:text-gray-500 mt-2">{Math.round(slotsProgress)}% filled • {slots.remaining} slot{slots.remaining !== 1 ? 's' : ''} remaining</p>
         </Section>
 
         {/* Timeline */}
@@ -478,7 +478,7 @@ export function CreatorCampaignDetailPage({ campaign, onBack }: CreatorCampaignD
           <KV label="Min Followers" value={campaign.minimumFollowers ? campaign.minimumFollowers.toLocaleString('en-IN') : null} />
           {has(raw, 'engagementRate') && <KV label="Engagement Rate" value={`${r(raw, 'engagementRate')}%`} />}
           {!campaign.preferredNiche && !campaign.minimumFollowers && (
-            <p className="text-xs text-gray-600 italic">No specific requirements.</p>
+            <p className="text-xs text-gray-400 dark:text-gray-600 italic">No specific requirements.</p>
           )}
         </Section>
 
@@ -494,20 +494,20 @@ export function CreatorCampaignDetailPage({ campaign, onBack }: CreatorCampaignD
             )}
             {has(raw, 'handleToTag') && (
               <div className="flex items-center gap-2 mb-2">
-                <AtSign className="w-3.5 h-3.5 text-gray-500" />
-                <span className="text-sm text-gray-300">Tag: {r(raw, 'handleToTag')}</span>
+                <AtSign className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500" />
+                <span className="text-sm text-gray-700 dark:text-gray-300">Tag: {r(raw, 'handleToTag')}</span>
               </div>
             )}
             {has(raw, 'hashtags') && (
               <div className="flex items-start gap-2 mb-2">
-                <Hash className="w-3.5 h-3.5 text-gray-500 mt-0.5" />
-                <span className="text-sm text-gray-300">{rArr(raw, 'hashtags').join('  ')}</span>
+                <Hash className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500 mt-0.5" />
+                <span className="text-sm text-gray-700 dark:text-gray-300">{rArr(raw, 'hashtags').join('  ')}</span>
               </div>
             )}
             {has(raw, 'captionGuidelines') && (
               <div className="flex items-start gap-2 mb-2">
-                <MessageSquare className="w-3.5 h-3.5 text-gray-500 mt-0.5" />
-                <span className="text-sm text-gray-300">{r(raw, 'captionGuidelines')}</span>
+                <MessageSquare className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500 mt-0.5" />
+                <span className="text-sm text-gray-700 dark:text-gray-300">{r(raw, 'captionGuidelines')}</span>
               </div>
             )}
           </Section>
@@ -558,9 +558,9 @@ export function CreatorCampaignDetailPage({ campaign, onBack }: CreatorCampaignD
 function Section({ icon, title, children, className = '' }: { icon: React.ReactNode; title: string; children: React.ReactNode; className?: string }) {
   return (
     <DashCard className={`space-y-3 ${className}`}>
-      <div className="flex items-center gap-2.5 pb-3 border-b border-white/5">
+      <div className="flex items-center gap-2.5 pb-3 border-b border-gray-100 dark:border-white/5">
         {icon}
-        <h3 className="text-sm font-semibold text-white">{title}</h3>
+        <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{title}</h3>
       </div>
       <div>{children}</div>
     </DashCard>
@@ -571,7 +571,7 @@ function KV({ label, value }: { label: string; value?: string | null }) {
   if (!value) return null
   return (
     <div className="flex gap-3 mb-2.5 last:mb-0">
-      <span className="text-xs text-gray-500 w-32 shrink-0 pt-0.5">{label}</span>
+      <span className="text-xs text-gray-400 dark:text-gray-500 w-32 shrink-0 pt-0.5">{label}</span>
       <span className="text-sm text-gray-200 flex-1">{value}</span>
     </div>
   )
@@ -579,11 +579,11 @@ function KV({ label, value }: { label: string; value?: string | null }) {
 
 function QuickStat({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
-    <div className="flex items-center gap-2.5 bg-white/[0.04] rounded-lg px-3 py-2.5 border border-white/5">
+    <div className="flex items-center gap-2.5 bg-gray-50 dark:bg-white/[0.04] rounded-lg px-3 py-2.5 border border-gray-100 dark:border-white/5">
       {icon}
       <div>
-        <p className="text-[11px] text-gray-500">{label}</p>
-        <p className="text-sm font-semibold text-white">{value}</p>
+        <p className="text-[11px] text-gray-400 dark:text-gray-500">{label}</p>
+        <p className="text-sm font-semibold text-gray-900 dark:text-white">{value}</p>
       </div>
     </div>
   )
@@ -591,19 +591,19 @@ function QuickStat({ icon, label, value }: { icon: React.ReactNode; label: strin
 
 function InfoTile({ label, value, accent = '' }: { label: string; value: string; accent?: string }) {
   return (
-    <div className={`bg-white/[0.03] border border-white/5 rounded-xl px-3 py-3 text-center ${accent}`}>
-      <p className="text-lg font-bold text-white">{value}</p>
-      <p className="text-[11px] text-gray-500 mt-1">{label}</p>
+    <div className={`bg-gray-50 dark:bg-white/[0.03] border border-gray-100 dark:border-white/5 rounded-xl px-3 py-3 text-center ${accent}`}>
+      <p className="text-lg font-bold text-gray-900 dark:text-white">{value}</p>
+      <p className="text-[11px] text-gray-400 dark:text-gray-500 mt-1">{label}</p>
     </div>
   )
 }
 
 function DeliverableTile({ icon, label, count }: { icon: React.ReactNode; label: string; count: number }) {
   return (
-    <div className="bg-white/[0.03] border border-white/5 rounded-xl px-3 py-4 text-center flex flex-col items-center gap-2">
+    <div className="bg-gray-50 dark:bg-white/[0.03] border border-gray-100 dark:border-white/5 rounded-xl px-3 py-4 text-center flex flex-col items-center gap-2">
       {icon}
-      <p className="text-2xl font-bold text-white">{count}</p>
-      <p className="text-[11px] text-gray-500 font-medium">{label}</p>
+      <p className="text-2xl font-bold text-gray-900 dark:text-white">{count}</p>
+      <p className="text-[11px] text-gray-400 dark:text-gray-500 font-medium">{label}</p>
     </div>
   )
 }
@@ -611,8 +611,8 @@ function DeliverableTile({ icon, label, count }: { icon: React.ReactNode; label:
 function TimelineRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between">
-      <span className="text-sm text-gray-400">{label}</span>
-      <span className="text-sm font-medium text-white">{value}</span>
+      <span className="text-sm text-gray-500 dark:text-gray-400">{label}</span>
+      <span className="text-sm font-medium text-gray-900 dark:text-white">{value}</span>
     </div>
   )
 }

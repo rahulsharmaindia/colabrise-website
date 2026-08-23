@@ -38,10 +38,10 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
 
   if (state === 'loading') {
     return (
-      <div className="min-h-screen bg-dark-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-dark-900 flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
           <div className="w-8 h-8 border-2 border-purple-500 border-t-transparent rounded-full animate-spin" />
-          <p className="text-sm text-gray-400">Verifying session…</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Verifying session…</p>
         </div>
       </div>
     )

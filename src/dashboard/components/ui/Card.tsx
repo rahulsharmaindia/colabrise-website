@@ -8,7 +8,7 @@ interface DashCardProps {
 export function DashCard({ children, className = '' }: DashCardProps) {
   return (
     <div
-      className={`rounded-xl border border-white/10 bg-dark-800 p-5 ${className}`}
+      className={`rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-dark-800 p-5 ${className}`}
     >
       {children}
     </div>
@@ -25,8 +25,8 @@ export function DashCardHeader({ title, description, action }: DashCardHeaderPro
   return (
     <div className="flex items-center justify-between mb-4 px-5 pt-5">
       <div>
-        <h3 className="text-base font-semibold text-white">{title}</h3>
-        {description && <p className="text-sm text-gray-400 mt-0.5">{description}</p>}
+        <h3 className="text-base font-semibold text-gray-900 dark:text-white">{title}</h3>
+        {description && <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{description}</p>}
       </div>
       {action}
     </div>
