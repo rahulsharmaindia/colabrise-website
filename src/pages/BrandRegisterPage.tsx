@@ -350,7 +350,7 @@ export default function BrandRegisterPage() {
             {/* Right: form panel — blue-tone gradient mockup style */}
             <div className="relative flex justify-center items-center">
               <TiltCard tiltStrength={6}>
-                <div className="relative w-full max-w-2xl">
+                <div className="relative w-full">
                   {/* Glow behind */}
                   <div className="absolute inset-0 rounded-[28px] bg-gradient-to-r from-blue-400 via-indigo-500 to-cyan-400 blur-2xl opacity-40 -z-10" />
 
