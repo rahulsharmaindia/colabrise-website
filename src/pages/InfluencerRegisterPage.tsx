@@ -202,7 +202,7 @@ export default function InfluencerRegisterPage() {
                         {/* Content */}
                         <div className="relative z-10 px-6 py-10 md:px-10 md:py-14 text-center">
                           <p className="text-[11px] text-white/70 font-medium uppercase tracking-wider mb-1">CREATOR</p>
-                          <h2 className="text-white font-semibold text-2xl md:text-3xl mb-2">Sign in</h2>
+                          <h2 className="text-white font-semibold text-2xl md:text-3xl mb-2">Creator Sign In</h2>
                           <p className="text-white/60 text-sm mb-8 max-w-xs mx-auto">
                             Access your creator dashboard to manage collabs, track growth, and get paid.
                           </p>

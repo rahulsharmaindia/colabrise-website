@@ -37,17 +37,48 @@ apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
 
 // The server wraps every response as { data, error, requestId }.
 // Unwrap `data` here so callers work with plain payloads.
-apiClient.interceptors.response.use((response) => {
-  if (
-    response.data &&
-    typeof response.data === 'object' &&
-    'data' in response.data &&
-    'error' in response.data
-  ) {
-    response.data = response.data.data
-  }
-  return response
-})
+// On 401, clear the expired session and redirect to home for re-authentication.
+apiClient.interceptors.response.use(
+  (response) => {
+    if (
+      response.data &&
+      typeof response.data === 'object' &&
+      'data' in response.data &&
+      'error' in response.data
+    ) {
+      response.data = response.data.data
+    }
+    return response
+  },
+  (error) => {
+    if (error.response?.status === 401) {
+      // Determine which role was logged in before clearing
+      let redirectPath = '/'
+      try {
+        const hadCreatorSession = !!localStorage.getItem('colabrise_influencer_session_id')
+        const hadBrandSession = !!localStorage.getItem('colabrise_brand_session_id')
+        if (hadCreatorSession) redirectPath = '/creators/register'
+        else if (hadBrandSession) redirectPath = '/brands/register'
+      } catch {
+        // localStorage unavailable
+      }
+
+      // Clear stored sessions
+      try {
+        localStorage.removeItem('colabrise_influencer_session_id')
+        localStorage.removeItem('colabrise_brand_session_id')
+      } catch {
+        // localStorage unavailable (SSR/test)
+      }
+
+      // Redirect to the appropriate login page
+      if (typeof window !== 'undefined' && window.location.pathname.startsWith('/dashboard')) {
+        window.location.href = redirectPath
+      }
+    }
+    return Promise.reject(error)
+  },
+)
 
 /** Extract a human-readable error message from an unknown thrown value. */
 export function getErrorMessage(error: unknown): string {

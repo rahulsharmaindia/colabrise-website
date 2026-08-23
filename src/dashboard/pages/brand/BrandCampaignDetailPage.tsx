@@ -3,10 +3,10 @@ import {
   ArrowLeft, Pencil, Loader2, FileText, DollarSign,
   Users, Calendar, Target, CheckSquare, Globe, Link2, Film,
   Clapperboard, BookOpen, Image, IndianRupee, Clock, Hash,
-  AtSign, MessageSquare, Copy,
+  AtSign, MessageSquare, Copy, CheckCircle2, XCircle, UserCheck,
 } from 'lucide-react'
 import { DashCard, DashButton, DashBadge } from '../../components/ui'
-import { getCampaign, type Campaign, type CampaignStatus } from '../../../api/campaigns'
+import { getCampaign, listCampaignApplications, reviewApplication, type Campaign, type CampaignStatus, type CampaignApplication } from '../../../api/campaigns'
 import { getErrorMessage } from '../../../lib/api-client'
 
 interface BrandCampaignDetailPageProps {
@@ -263,6 +263,9 @@ export function BrandCampaignDetailPage({ campaignId, onBack, onEdit, onDuplicat
           </div>
         </Section>
 
+        {/* Applications — full width */}
+        <ApplicationsPanel campaignId={campaignId} campaignStatus={campaign.status} onStatusChange={fetchCampaign} />
+
         {/* Timeline */}
         <Section icon={<Calendar className="w-4 h-4 text-cyan-400" />} title="Timeline">
           <div className="space-y-3">
@@ -392,6 +395,177 @@ export function BrandCampaignDetailPage({ campaignId, onBack, onEdit, onDuplicat
           </Section>
         )}
       </div>
+    </div>
+  )
+}
+
+// ── Applications Panel ───────────────────────────────────────
+
+function ApplicationsPanel({ campaignId, campaignStatus, onStatusChange }: { campaignId: string; campaignStatus: CampaignStatus; onStatusChange: () => void }) {
+  const [applications, setApplications] = useState<CampaignApplication[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [reviewing, setReviewing] = useState<string | null>(null)
+
+  const fetchApplications = useCallback(async () => {
+    setLoading(true)
+    setError(null)
+    try {
+      const data = await listCampaignApplications(campaignId)
+      setApplications(data)
+    } catch (e) {
+      setError(getErrorMessage(e))
+    } finally {
+      setLoading(false)
+    }
+  }, [campaignId])
+
+  useEffect(() => {
+    fetchApplications()
+  }, [fetchApplications])
+
+  const handleReview = async (applicationId: string, status: 'Approved' | 'Rejected') => {
+    setReviewing(applicationId)
+    try {
+      await reviewApplication(campaignId, applicationId, status)
+      await fetchApplications()
+      onStatusChange()
+    } catch (e) {
+      setError(getErrorMessage(e))
+    } finally {
+      setReviewing(null)
+    }
+  }
+
+  const pending = applications.filter((a) => a.status === 'Pending')
+  const approved = applications.filter((a) => a.status === 'Approved')
+  const rejected = applications.filter((a) => a.status === 'Rejected')
+
+  return (
+    <Section icon={<UserCheck className="w-4 h-4 text-indigo-400" />} title={`Applications (${applications.length})`} className="lg:col-span-2">
+      {loading ? (
+        <div className="flex items-center justify-center py-8">
+          <Loader2 className="w-5 h-5 text-purple-400 animate-spin" />
+        </div>
+      ) : error ? (
+        <p className="text-sm text-red-400">{error}</p>
+      ) : applications.length === 0 ? (
+        <p className="text-sm text-gray-400 dark:text-gray-500 py-4 text-center">No applications yet.</p>
+      ) : (
+        <div className="space-y-4">
+          {/* Pending applications — show first with action buttons */}
+          {pending.length > 0 && (
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-amber-400 mb-2">Pending ({pending.length})</p>
+              <div className="space-y-2">
+                {pending.map((app) => (
+                  <ApplicationCard
+                    key={app.applicationId}
+                    app={app}
+                    reviewing={reviewing === app.applicationId}
+                    canReview={campaignStatus !== 'completed' && campaignStatus !== 'cancelled' && campaignStatus !== 'archived'}
+                    onApprove={() => handleReview(app.applicationId, 'Approved')}
+                    onReject={() => handleReview(app.applicationId, 'Rejected')}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+          {/* Approved */}
+          {approved.length > 0 && (
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-emerald-400 mb-2">Approved ({approved.length})</p>
+              <div className="space-y-2">
+                {approved.map((app) => (
+                  <ApplicationCard key={app.applicationId} app={app} />
+                ))}
+              </div>
+            </div>
+          )}
+          {/* Rejected */}
+          {rejected.length > 0 && (
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-red-400 mb-2">Rejected ({rejected.length})</p>
+              <div className="space-y-2">
+                {rejected.map((app) => (
+                  <ApplicationCard key={app.applicationId} app={app} />
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </Section>
+  )
+}
+
+function ApplicationCard({
+  app,
+  reviewing = false,
+  canReview = false,
+  onApprove,
+  onReject,
+}: {
+  app: CampaignApplication
+  reviewing?: boolean
+  canReview?: boolean
+  onApprove?: () => void
+  onReject?: () => void
+}) {
+  const statusColor = app.status === 'Approved' ? 'text-emerald-400' : app.status === 'Rejected' ? 'text-red-400' : 'text-amber-400'
+  const statusBg = app.status === 'Approved' ? 'bg-emerald-500/10 border-emerald-500/20' : app.status === 'Rejected' ? 'bg-red-500/10 border-red-500/20' : 'bg-amber-500/10 border-amber-500/20'
+
+  return (
+    <div className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 dark:bg-white/[0.03] border border-gray-100 dark:border-white/[0.06]">
+      {/* Avatar */}
+      {app.profilePictureUrl ? (
+        <img
+          src={app.profilePictureUrl}
+          alt={app.username}
+          className="w-10 h-10 rounded-full object-cover border-2 border-gray-200 dark:border-white/10"
+        />
+      ) : (
+        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500/20 to-indigo-500/20 border border-purple-500/10 flex items-center justify-center">
+          <span className="text-sm font-bold text-purple-400">
+            {(app.username ?? '?').slice(0, 2).toUpperCase()}
+          </span>
+        </div>
+      )}
+
+      {/* Info */}
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{app.username || 'Unknown'}</p>
+        <div className="flex items-center gap-3 text-[11px] text-gray-400 dark:text-gray-500">
+          <span>{app.followerCount > 0 ? `${(app.followerCount / 1000).toFixed(1)}K followers` : 'No followers data'}</span>
+          <span>{new Date(app.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+        </div>
+      </div>
+
+      {/* Status or actions */}
+      {app.status === 'Pending' && canReview && onApprove && onReject ? (
+        <div className="flex items-center gap-2">
+          <button
+            onClick={onApprove}
+            disabled={reviewing}
+            className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors disabled:opacity-50"
+          >
+            {reviewing ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle2 className="w-3 h-3" />}
+            Approve
+          </button>
+          <button
+            onClick={onReject}
+            disabled={reviewing}
+            className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-medium hover:bg-red-500/20 transition-colors disabled:opacity-50"
+          >
+            {reviewing ? <Loader2 className="w-3 h-3 animate-spin" /> : <XCircle className="w-3 h-3" />}
+            Reject
+          </button>
+        </div>
+      ) : (
+        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold border ${statusBg} ${statusColor}`}>
+          {app.status}
+        </span>
+      )}
     </div>
   )
 }

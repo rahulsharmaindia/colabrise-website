@@ -51,6 +51,8 @@ export function normalizeProfile(raw: CreatorProfile): CreatorProfile {
     followerCount: raw.followerCount ?? raw.followers_count ?? 0,
     followsCount: raw.followsCount ?? raw.follows_count ?? 0,
     mediaCount: raw.mediaCount ?? raw.media_count ?? 0,
+    niche: raw.niche ?? null,
+    instagramHandle: raw.instagramHandle ?? (raw as Record<string, unknown>).instagram_handle as string ?? null,
     contactNumber: raw.contactNumber ?? raw.contact_number ?? null,
     emailVerificationStatus: raw.emailVerificationStatus ?? raw.email_verification_status ?? null,
     contactVerificationStatus: raw.contactVerificationStatus ?? raw.contact_verification_status ?? null,
@@ -91,7 +93,7 @@ export interface CampaignStats {
   rejected: number
 }
 
-export type CreatorCampaignFilter = 'all' | 'active' | 'completed' | 'applied' | 'approved'
+export type CreatorCampaignFilter = 'all' | 'active' | 'completed' | 'applied'
 
 export interface CreatorCampaign {
   campaignId: string
@@ -168,36 +170,142 @@ export async function updateCreatorProfile(
 
 // ── Campaign Stats ────────────────────────────────────────────
 
-/** Get creator campaign summary stats */
+/** Get creator campaign summary stats — computed from my-campaigns data */
 export async function getCreatorCampaignStats(): Promise<CampaignStats> {
-  const { data } = await apiClient.get<CampaignStats>('/api/creator/campaigns/stats')
-  return data ?? { active: 0, completed: 0, applied: 0, rejected: 0 }
+  try {
+    const { data } = await apiClient.get('/api/my-campaigns')
+    const allMy: CreatorCampaign[] = Array.isArray(data) ? data as CreatorCampaign[] : []
+
+    let active = 0
+    let completed = 0
+    let applied = 0
+    let rejected = 0
+
+    for (const c of allMy) {
+      const appStatus = (c.applicationStatus ?? '').toLowerCase()
+      const campStatus = (c.status ?? '').toLowerCase()
+
+      if (appStatus === 'rejected') {
+        rejected++
+      } else if (campStatus === 'completed' || campStatus === 'archived') {
+        completed++
+      } else if (appStatus === 'approved') {
+        active++
+      } else if (appStatus === 'pending') {
+        applied++
+      }
+    }
+
+    return { active, completed, applied, rejected }
+  } catch {
+    return { active: 0, completed: 0, applied: 0, rejected: 0 }
+  }
 }
 
 // ── Campaigns ─────────────────────────────────────────────────
 
-/** Get marketplace campaigns with optional filter for creator view */
+/** Get marketplace campaigns with optional filter for creator view.
+ *
+ * - `all`: Marketplace campaigns (Published/Active) the creator can browse.
+ * - `active`: Campaigns where the creator's application is Approved and
+ *   the campaign is still running (not completed/archived/cancelled).
+ * - `completed`: Campaigns the creator applied to that are now Completed or Archived.
+ * - `applied`: Campaigns where the creator's application is Pending and
+ *   the campaign is still running.
+ */
 export async function getCreatorCampaigns(params?: {
   filter?: CreatorCampaignFilter
   search?: string
   niche?: string
   limit?: number
 }): Promise<CreatorCampaign[]> {
+  const filter = params?.filter ?? 'all'
+
+  // For active/completed/applied tabs, use /api/my-campaigns which returns
+  // campaigns the creator has applied to, enriched with applicationStatus.
+  if (filter === 'active' || filter === 'completed' || filter === 'applied') {
+    const { data } = await apiClient.get('/api/my-campaigns')
+    const allMy: CreatorCampaign[] = Array.isArray(data) ? data as CreatorCampaign[] : []
+
+    let filtered: CreatorCampaign[]
+    if (filter === 'applied') {
+      // Pending applications on campaigns that are still running
+      filtered = allMy.filter((c) => {
+        const appStatus = (c.applicationStatus ?? '').toLowerCase()
+        const campStatus = (c.status ?? '').toLowerCase()
+        return appStatus === 'pending' &&
+          campStatus !== 'completed' &&
+          campStatus !== 'archived' &&
+          campStatus !== 'cancelled'
+      })
+    } else if (filter === 'active') {
+      // Approved applications on campaigns that are still running
+      filtered = allMy.filter((c) => {
+        const appStatus = (c.applicationStatus ?? '').toLowerCase()
+        const campStatus = (c.status ?? '').toLowerCase()
+        return appStatus === 'approved' &&
+          campStatus !== 'completed' &&
+          campStatus !== 'archived' &&
+          campStatus !== 'cancelled'
+      })
+    } else {
+      // Completed: campaigns that are done (regardless of application status)
+      filtered = allMy.filter((c) => {
+        const campStatus = (c.status ?? '').toLowerCase()
+        return campStatus === 'completed' || campStatus === 'archived'
+      })
+    }
+
+    // Apply client-side search if provided
+    if (params?.search) {
+      const q = params.search.toLowerCase()
+      filtered = filtered.filter(
+        (c) =>
+          (c.title ?? '').toLowerCase().includes(q) ||
+          (c.brandName ?? '').toLowerCase().includes(q) ||
+          (c.preferredNiche ?? '').toLowerCase().includes(q),
+      )
+    }
+
+    return filtered
+  }
+
+  // For 'all' tab, use the marketplace endpoint + enrich with application status
   const searchParams = new URLSearchParams()
   if (params?.limit) searchParams.set('limit', String(params.limit))
   if (params?.search) searchParams.set('search', params.search)
   if (params?.niche) searchParams.set('niche', params.niche)
-  if (params?.filter && params.filter !== 'all') searchParams.set('status', params.filter)
 
   const qs = searchParams.toString()
   const url = `/api/marketplace/campaigns${qs ? `?${qs}` : ''}`
-  const { data } = await apiClient.get(url)
+  const [marketRes, myRes] = await Promise.all([
+    apiClient.get(url),
+    apiClient.get('/api/my-campaigns').catch(() => ({ data: [] })),
+  ])
 
-  if (data && typeof data === 'object' && 'items' in data) {
-    return (data as { items: CreatorCampaign[] }).items
+  let campaigns: CreatorCampaign[]
+  if (marketRes.data && typeof marketRes.data === 'object' && 'items' in marketRes.data) {
+    campaigns = (marketRes.data as { items: CreatorCampaign[] }).items
+  } else if (Array.isArray(marketRes.data)) {
+    campaigns = marketRes.data as CreatorCampaign[]
+  } else {
+    campaigns = []
   }
-  if (Array.isArray(data)) return data as CreatorCampaign[]
-  return []
+
+  // Build a lookup of application statuses from my-campaigns
+  const myData = Array.isArray(myRes.data) ? myRes.data as CreatorCampaign[] : []
+  const appStatusMap = new Map<string, string>()
+  for (const c of myData) {
+    if (c.campaignId && c.applicationStatus) {
+      appStatusMap.set(c.campaignId, c.applicationStatus)
+    }
+  }
+
+  // Merge application status into marketplace campaigns
+  return campaigns.map((c) => ({
+    ...c,
+    applicationStatus: c.applicationStatus ?? appStatusMap.get(c.campaignId) ?? null,
+  }))
 }
 
 /** Apply for a campaign. POST /api/campaigns/:id/applications */

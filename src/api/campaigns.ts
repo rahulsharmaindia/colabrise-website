@@ -91,3 +91,33 @@ export async function duplicateCampaign(campaignId: string): Promise<Campaign> {
 export async function deleteCampaign(campaignId: string): Promise<void> {
   await apiClient.delete(`/api/campaigns/${campaignId}`)
 }
+
+// ── Application types ─────────────────────────────────────────
+
+export interface CampaignApplication {
+  applicationId: string
+  campaignId: string
+  influencerId: string
+  username: string
+  followerCount: number
+  profilePictureUrl?: string | null
+  status: 'Pending' | 'Approved' | 'Rejected' | 'Withdrawn'
+  createdAt: string
+}
+
+// ── Application endpoints ─────────────────────────────────────
+
+/** List all applications for a campaign. GET /api/campaigns/:id/applications */
+export async function listCampaignApplications(campaignId: string): Promise<CampaignApplication[]> {
+  const { data } = await apiClient.get<CampaignApplication[]>(`/api/campaigns/${campaignId}/applications`)
+  return data ?? []
+}
+
+/** Approve or reject an application. PATCH /api/campaigns/:campaignId/applications/:applicationId */
+export async function reviewApplication(
+  campaignId: string,
+  applicationId: string,
+  status: 'Approved' | 'Rejected',
+): Promise<void> {
+  await apiClient.patch(`/api/campaigns/${campaignId}/applications/${applicationId}`, { status })
+}

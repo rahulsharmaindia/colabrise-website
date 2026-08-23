@@ -27,7 +27,7 @@ function FieldWrapper({ label, hint, error, required, children, htmlFor }: Field
 }
 
 const fieldBase =
-  'w-full rounded-xl border bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-gray-500 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500/40 focus:border-purple-400/60 disabled:opacity-50'
+  'w-full rounded-xl border bg-white/5 px-6 py-3 text-sm text-white placeholder:text-gray-500 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500/40 focus:border-purple-400/60 disabled:opacity-50'
 
 interface FormInputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string

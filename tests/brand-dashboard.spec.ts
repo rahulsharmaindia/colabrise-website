@@ -114,6 +114,39 @@ const MOCK_CREATORS = [
   },
 ]
 
+const MOCK_APPLICATIONS = [
+  {
+    applicationId: 'app-1',
+    campaignId: 'camp-1',
+    influencerId: 'inf-1',
+    username: 'luna_vega',
+    followerCount: 45000,
+    profilePictureUrl: null,
+    status: 'Pending',
+    createdAt: '2026-08-15T10:00:00.000Z',
+  },
+  {
+    applicationId: 'app-2',
+    campaignId: 'camp-1',
+    influencerId: 'inf-2',
+    username: 'fit_raj',
+    followerCount: 120000,
+    profilePictureUrl: 'https://example.com/pic.jpg',
+    status: 'Approved',
+    createdAt: '2026-08-10T10:00:00.000Z',
+  },
+  {
+    applicationId: 'app-3',
+    campaignId: 'camp-1',
+    influencerId: 'inf-3',
+    username: 'foodie_dev',
+    followerCount: 8000,
+    profilePictureUrl: null,
+    status: 'Rejected',
+    createdAt: '2026-08-12T10:00:00.000Z',
+  },
+]
+
 // ── Setup helpers ────────────────────────────────────────────
 
 async function setupBrandSession(page: Page) {
@@ -165,6 +198,28 @@ async function mockAPIs(page: Page) {
   // Mock single campaign detail
   await page.route('**/api/campaigns/camp-*', (route) => {
     const url = route.request().url()
+    const method = route.request().method()
+
+    // Handle applications sub-route
+    if (url.includes('/applications')) {
+      if (method === 'GET') {
+        route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({ data: MOCK_APPLICATIONS, error: null, requestId: 'a1' }),
+        })
+      } else if (method === 'PATCH') {
+        route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({ data: { status: 'Approved' }, error: null, requestId: 'a2' }),
+        })
+      } else {
+        route.continue()
+      }
+      return
+    }
+
     const match = url.match(/campaigns\/(camp-\d+)/)
     if (match) {
       const campaign = MOCK_CAMPAIGNS.find((c) => c.campaignId === match[1]) ?? MOCK_CAMPAIGNS[0]
@@ -531,5 +586,123 @@ test.describe('Brand Dashboard - Sign Out', () => {
     await expect(page).toHaveURL('/')
     const session = await page.evaluate(() => localStorage.getItem('colabrise_brand_session_id'))
     expect(session).toBeNull()
+  })
+})
+
+// ── Tests: Campaign Applications ─────────────────────────────
+
+test.describe('Brand Dashboard - Campaign Applications', () => {
+  test.beforeEach(async ({ page }) => {
+    await setupBrandSession(page)
+    await mockAPIs(page)
+  })
+
+  test('campaign detail shows Applications section', async ({ page }) => {
+    await page.goto('/dashboard/campaigns')
+    await page.getByText('Summer Beauty Launch').click()
+    await expect(page.getByText(/Applications \(3\)/)).toBeVisible()
+  })
+
+  test('applications are grouped by status', async ({ page }) => {
+    await page.goto('/dashboard/campaigns')
+    await page.getByText('Summer Beauty Launch').click()
+    await expect(page.getByText('Pending (1)')).toBeVisible()
+    await expect(page.getByText('Approved (1)')).toBeVisible()
+    await expect(page.getByText('Rejected (1)')).toBeVisible()
+  })
+
+  test('pending applications show Approve and Reject buttons', async ({ page }) => {
+    await page.goto('/dashboard/campaigns')
+    await page.getByText('Summer Beauty Launch').click()
+    await expect(page.getByRole('button', { name: /Approve/ })).toBeVisible()
+    await expect(page.getByRole('button', { name: /Reject/ })).toBeVisible()
+  })
+
+  test('approved applications do not show action buttons', async ({ page }) => {
+    await page.goto('/dashboard/campaigns')
+    await page.getByText('Summer Beauty Launch').click()
+    // fit_raj is approved — should show "Approved" badge, not buttons
+    const approvedSection = page.locator('div', { hasText: 'fit_raj' })
+    await expect(approvedSection.getByText('Approved')).toBeVisible()
+  })
+
+  test('applications show username and follower count', async ({ page }) => {
+    await page.goto('/dashboard/campaigns')
+    await page.getByText('Summer Beauty Launch').click()
+    await expect(page.getByText('luna_vega')).toBeVisible()
+    await expect(page.getByText('45.0K followers')).toBeVisible()
+    await expect(page.getByText('fit_raj')).toBeVisible()
+    await expect(page.getByText('120.0K followers')).toBeVisible()
+  })
+
+  test('applications show profile picture when available', async ({ page }) => {
+    await page.goto('/dashboard/campaigns')
+    await page.getByText('Summer Beauty Launch').click()
+    // fit_raj has a profile picture URL
+    const img = page.locator('img[alt="fit_raj"]')
+    await expect(img).toBeVisible()
+  })
+
+  test('applications show initials when no profile picture', async ({ page }) => {
+    await page.goto('/dashboard/campaigns')
+    await page.getByText('Summer Beauty Launch').click()
+    // luna_vega has no profile picture — should show initials "LU"
+    await expect(page.getByText('LU')).toBeVisible()
+  })
+
+  test('clicking Approve sends PATCH request', async ({ page }) => {
+    await page.goto('/dashboard/campaigns')
+    await page.getByText('Summer Beauty Launch').click()
+    
+    let patchCalled = false
+    let patchBody: unknown = null
+    await page.route('**/api/campaigns/camp-1/applications/app-1', (route) => {
+      if (route.request().method() === 'PATCH') {
+        patchCalled = true
+        patchBody = JSON.parse(route.request().postData() ?? '{}')
+        route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({ data: { ...MOCK_APPLICATIONS[0], status: 'Approved' }, error: null, requestId: 'a3' }),
+        })
+      } else {
+        route.continue()
+      }
+    })
+
+    await page.getByRole('button', { name: /Approve/ }).click()
+    await page.waitForTimeout(500)
+    expect(patchCalled).toBe(true)
+    expect(patchBody).toEqual({ status: 'Approved' })
+  })
+
+  test('clicking Reject sends PATCH request', async ({ page }) => {
+    await page.goto('/dashboard/campaigns')
+    await page.getByText('Summer Beauty Launch').click()
+
+    let patchBody: unknown = null
+    await page.route('**/api/campaigns/camp-1/applications/app-1', (route) => {
+      if (route.request().method() === 'PATCH') {
+        patchBody = JSON.parse(route.request().postData() ?? '{}')
+        route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({ data: { ...MOCK_APPLICATIONS[0], status: 'Rejected' }, error: null, requestId: 'a4' }),
+        })
+      } else {
+        route.continue()
+      }
+    })
+
+    await page.getByRole('button', { name: /Reject/ }).click()
+    await page.waitForTimeout(500)
+    expect(patchBody).toEqual({ status: 'Rejected' })
+  })
+
+  test('applications show application date', async ({ page }) => {
+    await page.goto('/dashboard/campaigns')
+    await page.getByText('Summer Beauty Launch').click()
+    // Aug 15 for luna_vega
+    await expect(page.getByText('Aug 15')).toBeVisible()
   })
 })
