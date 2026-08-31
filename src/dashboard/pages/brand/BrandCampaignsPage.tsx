@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { Megaphone, Calendar, Users, DollarSign, Loader2, RefreshCw, Target, Film, IndianRupee, Handshake, Percent, Gift, Clapperboard, BookOpen, Image } from 'lucide-react'
+import { Megaphone, Calendar, Users, DollarSign, Loader2, RefreshCw, Target, Film, IndianRupee, Handshake, Percent, Gift, Clapperboard, BookOpen, Image, Share2 } from 'lucide-react'
 import { DashCard, DashButton, DashBadge, EmptyState } from '../../components/ui'
 import { listBrandCampaigns, type Campaign, type CampaignStatus } from '../../../api/campaigns'
 import { getErrorMessage } from '../../../lib/api-client'
@@ -36,6 +36,39 @@ function isExpired(campaign: Campaign): boolean {
 function formatBudget(amount?: number | null): string {
   if (amount == null) return '—'
   return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(amount)
+}
+
+// ── Share a campaign via the OG preview link ─────────────────
+
+function shareCampaign(campaign: Campaign): void {
+  const raw = campaign as unknown as Record<string, unknown>
+  const params = new URLSearchParams()
+  params.set('id', campaign.campaignId)
+  params.set('t', campaign.title.slice(0, 40))
+  const brandName = (raw.brandName as string) || ''
+  if (brandName) params.set('b', brandName.slice(0, 25))
+  if (campaign.budgetPerCreator) params.set('p', String(campaign.budgetPerCreator))
+  if (campaign.preferredNiche) params.set('n', campaign.preferredNiche)
+  if (campaign.paymentModel) params.set('pm', campaign.paymentModel)
+  if (campaign.minimumFollowers) {
+    const f = Number(campaign.minimumFollowers)
+    params.set('f', f >= 1000 ? `${(f / 1000).toFixed(0)}K+` : `${f}+`)
+  }
+  const d = getDeliverables(campaign)
+  if (d) {
+    const dparts: string[] = []
+    if (d.reels > 0) dparts.push(`${d.reels} ${d.reels === 1 ? 'Reel' : 'Reels'}`)
+    if (d.stories > 0) dparts.push(`${d.stories} ${d.stories === 1 ? 'Story' : 'Stories'}`)
+    if (d.posts > 0) dparts.push(`${d.posts} ${d.posts === 1 ? 'Post' : 'Posts'}`)
+    if (dparts.length > 0) params.set('dl', dparts.join(' + ').slice(0, 25))
+  }
+  params.set('app', String(campaign.approvedCount))
+  const shareUrl = `${window.location.origin}/api/og?${params.toString()}`
+  if (navigator.share) {
+    navigator.share({ title: campaign.title, url: shareUrl })
+  } else {
+    navigator.clipboard.writeText(shareUrl)
+  }
 }
 
 function formatDate(dateStr?: string | null): string {
@@ -347,6 +380,21 @@ export function BrandCampaignsPage() {
                     </span>
                   </div>
                 </button>
+
+                {/* Share button — outside the clickable area to avoid nested buttons */}
+                <div className="mt-2 pt-2 border-t border-gray-100 dark:border-white/5 flex justify-end">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      shareCampaign(campaign)
+                    }}
+                    className="inline-flex items-center gap-1.5 text-[11px] font-medium text-gray-400 hover:text-purple-400 transition-colors px-2 py-1 rounded-lg hover:bg-purple-500/5"
+                    title="Share campaign"
+                  >
+                    <Share2 className="w-3.5 h-3.5" />
+                    Share
+                  </button>
+                </div>
               </DashCard>
             )
           })}

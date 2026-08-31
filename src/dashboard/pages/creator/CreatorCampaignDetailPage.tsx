@@ -3,7 +3,7 @@ import {
   ArrowLeft, Loader2, FileText, DollarSign,
   Users, Calendar, Target, CheckSquare, Globe, Link2, Film,
   Clapperboard, BookOpen, Image, IndianRupee, Clock, Hash,
-  AtSign, MessageSquare, Send, Upload, X, CheckCircle2, XCircle,
+  AtSign, MessageSquare, Send, Upload, X, CheckCircle2, XCircle, Share2,
 } from 'lucide-react'
 import { DashCard, DashButton, DashBadge } from '../../components/ui'
 import { getErrorMessage } from '../../../lib/api-client'
@@ -247,6 +247,36 @@ export function CreatorCampaignDetailPage({ campaign, onBack }: CreatorCampaignD
     fetchApplicationStatus()
   }, [fetchApplicationStatus])
 
+  const handleShare = () => {
+    const raw = campaign as unknown as Record<string, unknown>
+    const params = new URLSearchParams()
+    params.set('id', campaign.campaignId)
+    params.set('t', campaign.title.slice(0, 40))
+    if (campaign.brandName) params.set('b', campaign.brandName.slice(0, 25))
+    if (campaign.budgetPerCreator) params.set('p', String(campaign.budgetPerCreator))
+    if (campaign.preferredNiche) params.set('n', campaign.preferredNiche)
+    if (campaign.paymentModel) params.set('pm', campaign.paymentModel)
+    if (campaign.minimumFollowers) {
+      const f = Number(campaign.minimumFollowers)
+      params.set('f', f >= 1000 ? `${(f / 1000).toFixed(0)}K+` : `${f}+`)
+    }
+    const d = raw.deliverables as Record<string, number> | null
+    if (d) {
+      const dparts: string[] = []
+      if (d.reels > 0) dparts.push(`${d.reels} ${d.reels === 1 ? 'Reel' : 'Reels'}`)
+      if (d.stories > 0) dparts.push(`${d.stories} ${d.stories === 1 ? 'Story' : 'Stories'}`)
+      if (d.posts > 0) dparts.push(`${d.posts} ${d.posts === 1 ? 'Post' : 'Posts'}`)
+      if (dparts.length > 0) params.set('dl', dparts.join(' + ').slice(0, 25))
+    }
+    params.set('app', String(campaign.approvedCount))
+    const shareUrl = `${window.location.origin}/api/og?${params.toString()}`
+    if (navigator.share) {
+      navigator.share({ title: campaign.title, url: shareUrl })
+    } else {
+      navigator.clipboard.writeText(shareUrl)
+    }
+  }
+
   const handleApply = async () => {
     setApplying(true)
     setApplyError(null)
@@ -294,7 +324,7 @@ export function CreatorCampaignDetailPage({ campaign, onBack }: CreatorCampaignD
       {/* Hero header card */}
       <DashCard className="!p-0 overflow-hidden">
         <div className="bg-gradient-to-r from-purple-500/10 via-pink-500/5 to-transparent px-6 py-5">
-          <div className="flex items-start justify-between">
+          <div className="flex items-start justify-between gap-3">
             <div className="space-y-2 flex-1 min-w-0">
               <div className="flex items-center gap-3 flex-wrap">
                 <h1 className="text-xl font-bold text-gray-900 dark:text-white">{campaign.title}</h1>
@@ -318,6 +348,14 @@ export function CreatorCampaignDetailPage({ campaign, onBack }: CreatorCampaignD
                 )}
               </div>
             </div>
+            <button
+              onClick={handleShare}
+              className="shrink-0 inline-flex items-center gap-1.5 text-xs font-medium text-gray-500 dark:text-gray-400 hover:text-purple-400 transition-colors px-3 py-1.5 rounded-lg border border-gray-200 dark:border-white/10 hover:border-purple-400/30"
+              title="Share campaign"
+            >
+              <Share2 className="w-3.5 h-3.5" />
+              Share
+            </button>
           </div>
 
           {/* Quick stats row */}

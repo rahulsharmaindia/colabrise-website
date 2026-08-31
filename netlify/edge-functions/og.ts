@@ -55,8 +55,11 @@ export default async function handler(request: Request, _context: Context) {
   <meta property="og:title" content="${esc(ogTitle)}" />
   <meta property="og:description" content="${esc(ogDescription)}" />
   <meta property="og:image" content="${esc(ogImage)}" />
+  <meta property="og:image:secure_url" content="${esc(ogImage)}" />
+  <meta property="og:image:type" content="image/png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="${esc(ogTitle)}" />
   <meta property="og:url" content="${esc(canonicalUrl)}" />
   <meta property="og:site_name" content="Colabrise" />
   <meta name="twitter:card" content="summary_large_image" />
