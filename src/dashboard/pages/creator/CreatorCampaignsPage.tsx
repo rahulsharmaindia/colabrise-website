@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
+import { useParams } from 'react-router-dom'
 import {
   Megaphone,
   Calendar,
@@ -551,14 +552,26 @@ function CreatorCampaignCard({
             onClick={() => {
               const params = new URLSearchParams()
               params.set('id', campaign.campaignId)
-              params.set('t', campaign.title)
-              if (campaign.brandName) params.set('b', campaign.brandName)
-              if (campaign.description) params.set('d', campaign.description.slice(0, 120))
+              params.set('t', campaign.title.slice(0, 40))
+              if (campaign.brandName) params.set('b', campaign.brandName.slice(0, 25))
               if (campaign.budgetPerCreator) params.set('p', String(campaign.budgetPerCreator))
               if (campaign.preferredNiche) params.set('n', campaign.preferredNiche)
+              const raw = campaign as unknown as Record<string, unknown>
+              if (raw.paymentModel) params.set('pm', String(raw.paymentModel))
+              if (raw.minimumFollowers) {
+                const f = Number(raw.minimumFollowers)
+                params.set('f', f >= 1000 ? `${(f / 1000).toFixed(0)}K+` : `${f}+`)
+              }
+              if (raw.requiredEngagementRate && Number(raw.requiredEngagementRate) > 0) {
+                params.set('ft', `${raw.requiredEngagementRate}%`)
+              }
+              const d = deliverableInfo
+              if (d) params.set('dl', d.label.slice(0, 25))
+              if (deadline !== null && deadline > 0) params.set('days', String(deadline))
+              params.set('app', String(appliedCount))
               const shareUrl = `${window.location.origin}/api/og?${params.toString()}`
               if (navigator.share) {
-                navigator.share({ title: campaign.title, text: campaign.description ?? '', url: shareUrl })
+                navigator.share({ title: campaign.title, url: shareUrl })
               } else {
                 navigator.clipboard.writeText(shareUrl)
               }
@@ -577,6 +590,7 @@ function CreatorCampaignCard({
 // ── Main Page ────────────────────────────────────────────────
 
 export function CreatorCampaignsPage() {
+  const { campaignId: urlCampaignId } = useParams<{ campaignId?: string }>()
   const [campaigns, setCampaigns] = useState<CreatorCampaign[]>([])
   const [stats, setStats] = useState<CampaignStats>({ active: 0, completed: 0, applied: 0, rejected: 0 })
   const [loading, setLoading] = useState(true)
@@ -627,6 +641,14 @@ export function CreatorCampaignsPage() {
     fetchStats()
     fetchCampaigns('', 'all')
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Auto-open campaign detail if URL has a campaignId (deep link from share)
+  useEffect(() => {
+    if (urlCampaignId && campaigns.length > 0 && !selectedCampaign) {
+      const found = campaigns.find((c) => c.campaignId === urlCampaignId)
+      if (found) setSelectedCampaign(found)
+    }
+  }, [urlCampaignId, campaigns, selectedCampaign])
 
   const handleSearchChange = (value: string) => {
     setSearch(value)

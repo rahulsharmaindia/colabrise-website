@@ -3,7 +3,7 @@ import {
   ArrowLeft, Pencil, Loader2, FileText, DollarSign,
   Users, Calendar, Target, CheckSquare, Globe, Link2, Film,
   Clapperboard, BookOpen, Image, IndianRupee, Clock, Hash,
-  AtSign, MessageSquare, Copy, CheckCircle2, XCircle, UserCheck,
+  AtSign, MessageSquare, Copy, CheckCircle2, XCircle, UserCheck, Share2,
 } from 'lucide-react'
 import { DashCard, DashButton, DashBadge } from '../../components/ui'
 import { getCampaign, listCampaignApplications, reviewApplication, type Campaign, type CampaignStatus, type CampaignApplication } from '../../../api/campaigns'
@@ -127,6 +127,37 @@ export function BrandCampaignDetailPage({ campaignId, onBack, onEdit, onDuplicat
     onDuplicate(data)
   }
 
+  const handleShare = () => {
+    if (!campaign) return
+    const params = new URLSearchParams()
+    params.set('id', campaign.campaignId)
+    params.set('t', campaign.title.slice(0, 40))
+    const brandName = (raw.brandName as string) || ''
+    if (brandName) params.set('b', brandName.slice(0, 25))
+    if (campaign.budgetPerCreator) params.set('p', String(campaign.budgetPerCreator))
+    if (campaign.preferredNiche) params.set('n', campaign.preferredNiche)
+    if (raw.paymentModel) params.set('pm', String(raw.paymentModel))
+    if (campaign.minimumFollowers) {
+      const f = Number(campaign.minimumFollowers)
+      params.set('f', f >= 1000 ? `${(f / 1000).toFixed(0)}K+` : `${f}+`)
+    }
+    const deliverables = raw.deliverables as Record<string, number> | null
+    if (deliverables) {
+      const dparts: string[] = []
+      if (deliverables.reels > 0) dparts.push(`${deliverables.reels} ${deliverables.reels === 1 ? 'Reel' : 'Reels'}`)
+      if (deliverables.stories > 0) dparts.push(`${deliverables.stories} ${deliverables.stories === 1 ? 'Story' : 'Stories'}`)
+      if (deliverables.posts > 0) dparts.push(`${deliverables.posts} ${deliverables.posts === 1 ? 'Post' : 'Posts'}`)
+      if (dparts.length > 0) params.set('dl', dparts.join(' + ').slice(0, 25))
+    }
+    params.set('app', String(campaign.approvedCount))
+    const shareUrl = `${window.location.origin}/api/og?${params.toString()}`
+    if (navigator.share) {
+      navigator.share({ title: campaign.title, url: shareUrl })
+    } else {
+      navigator.clipboard.writeText(shareUrl)
+    }
+  }
+
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-24 gap-3">
@@ -195,17 +226,23 @@ export function BrandCampaignDetailPage({ campaignId, onBack, onEdit, onDuplicat
                 )}
               </div>
             </div>
-            {expired ? (
-              <DashButton size="sm" onClick={handleDuplicate}>
-                <Copy className="w-3.5 h-3.5" />
-                Create Duplicate
+            <div className="flex items-center gap-2">
+              <DashButton variant="ghost" size="sm" onClick={handleShare} title="Share campaign">
+                <Share2 className="w-3.5 h-3.5" />
+                Share
               </DashButton>
-            ) : (campaign.status === 'draft' || campaign.status === 'published' || campaign.status === 'active') && (
-              <DashButton size="sm" onClick={startEdit}>
-                <Pencil className="w-3.5 h-3.5" />
-                Edit Campaign
-              </DashButton>
-            )}
+              {expired ? (
+                <DashButton size="sm" onClick={handleDuplicate}>
+                  <Copy className="w-3.5 h-3.5" />
+                  Create Duplicate
+                </DashButton>
+              ) : (campaign.status === 'draft' || campaign.status === 'published' || campaign.status === 'active') && (
+                <DashButton size="sm" onClick={startEdit}>
+                  <Pencil className="w-3.5 h-3.5" />
+                  Edit Campaign
+                </DashButton>
+              )}
+            </div>
           </div>
 
           {/* Quick stats row */}

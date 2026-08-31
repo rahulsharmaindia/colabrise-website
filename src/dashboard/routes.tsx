@@ -32,6 +32,7 @@ export function DashboardRoutes() {
       <Route index element={<OverviewPage />} />
       <Route path="brands" element={<BrandsPage />} />
       <Route path="campaigns" element={<CampaignsPage />} />
+      <Route path="campaigns/:campaignId" element={<CampaignsPage />} />
       <Route path="creators" element={<CreatorsPage />} />
       <Route path="my-campaigns" element={<CreatorMyCampaignsPage />} />
       <Route path="settings" element={<SettingsPage />} />

@@ -50,18 +50,21 @@ export default function InfluencerRegisterPage() {
   const [completed, setCompleted] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
+  // Read redirect param from URL (set by campaign share page)
+  const redirectTo = new URLSearchParams(window.location.search).get('redirect') || '/dashboard'
+
   useEffect(() => {
     if (authState.step === 'authenticated' && authState.profileComplete) {
-      navigate('/dashboard', { replace: true })
+      navigate(redirectTo, { replace: true })
     }
-  }, [authState, navigate])
+  }, [authState, navigate, redirectTo])
 
   useEffect(() => {
     if (completed) {
-      const timer = setTimeout(() => navigate('/dashboard', { replace: true }), 1500)
+      const timer = setTimeout(() => navigate(redirectTo, { replace: true }), 1500)
       return () => clearTimeout(timer)
     }
-  }, [completed, navigate])
+  }, [completed, navigate, redirectTo])
 
   const onChange = (field: keyof ProfileFormValues) => (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>,

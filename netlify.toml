@@ -1,0 +1,18 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Edge functions handle /api/og and /api/og-image (paths declared in each
+# function's `config`). They run before the SPA redirect below.
+
+# SPA fallback — everything except /api/* serves index.html so React Router
+# can handle client-side routes like /campaigns/:id.
+[[redirects]]
+  from = "/api/*"
+  to = "/api/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

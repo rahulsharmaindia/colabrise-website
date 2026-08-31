@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback, useMemo } from 'react'
+import { useParams } from 'react-router-dom'
 import { Megaphone, Calendar, Users, DollarSign, Loader2, RefreshCw, Target, Film, IndianRupee, Handshake, Percent, Gift, Clapperboard, BookOpen, Image } from 'lucide-react'
 import { DashCard, DashButton, DashBadge, EmptyState } from '../../components/ui'
 import { listBrandCampaigns, type Campaign, type CampaignStatus } from '../../../api/campaigns'
@@ -95,11 +96,12 @@ function getDeliverables(campaign: Campaign): { reels: number; stories: number; 
 }
 
 export function BrandCampaignsPage() {
+  const { campaignId: urlCampaignId } = useParams<{ campaignId?: string }>()
   const [campaigns, setCampaigns] = useState<Campaign[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [filter, setFilter] = useState<FilterTab>('all')
-  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [selectedId, setSelectedId] = useState<string | null>(urlCampaignId ?? null)
   const [creating, setCreating] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editingData, setEditingData] = useState<Record<string, unknown> | null>(null)

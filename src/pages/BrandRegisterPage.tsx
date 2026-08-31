@@ -24,6 +24,9 @@ function BrandLoginForm({ onSwitch }: { onSwitch: () => void }) {
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
+  // Read redirect param from URL (set by campaign share page)
+  const redirectTo = new URLSearchParams(window.location.search).get('redirect') || '/dashboard'
+
   const onChange = (field: keyof LoginFormValues) => (e: ChangeEvent<HTMLInputElement>) => {
     setValues((prev) => ({ ...prev, [field]: e.target.value }))
   }
@@ -48,7 +51,7 @@ function BrandLoginForm({ onSwitch }: { onSwitch: () => void }) {
         password: values.password,
       })
       setBrandSessionId(response.sessionId)
-      navigate('/dashboard', { replace: true })
+      navigate(redirectTo, { replace: true })
     } catch (error) {
       setSubmitError(getErrorMessage(error))
     } finally {

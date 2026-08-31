@@ -20,13 +20,8 @@ export default function CampaignSharePage() {
     const creatorSession = getInfluencerSessionId()
     const brandSession = getBrandSessionId()
 
-    if (creatorSession) {
-      // Creator → redirect to campaigns page (the detail is shown inline)
-      navigate(`/dashboard/campaigns`, { replace: true })
-      return
-    }
-    if (brandSession) {
-      navigate(`/dashboard/campaigns`, { replace: true })
+    if (creatorSession || brandSession) {
+      navigate(`/dashboard/campaigns/${campaignId}`, { replace: true })
       return
     }
 
@@ -69,13 +64,13 @@ export default function CampaignSharePage() {
           {/* CTA buttons */}
           <div className="space-y-3 pt-2">
             <a
-              href="/creators/register"
+              href={`/creators/register?redirect=/dashboard/campaigns/${campaignId}`}
               className="block w-full py-3 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-500 text-white text-sm font-semibold text-center hover:shadow-lg hover:shadow-purple-500/20 transition-all"
             >
               Sign In as Creator
             </a>
             <a
-              href="/brands/register"
+              href={`/brands/register?redirect=/dashboard/campaigns/${campaignId}`}
               className="block w-full py-3 rounded-xl border border-white/10 text-gray-300 text-sm font-medium text-center hover:bg-white/5 transition-colors"
             >
               Sign In as Brand
