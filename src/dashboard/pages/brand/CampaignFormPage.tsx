@@ -79,12 +79,67 @@ const EMPTY_FORM: CampaignFormData = {
   guidelinesDos: '', guidelinesDonts: '', brandMessaging: '', requireApproval: true,
 }
 
+// Returns a YYYY-MM-DD date string `days` from today (local time), matching
+// the format the native <input type="date"> fields use.
+function dateFromToday(days: number): string {
+  const d = new Date()
+  d.setHours(0, 0, 0, 0)
+  d.setDate(d.getDate() + days)
+  const yyyy = d.getFullYear()
+  const mm = String(d.getMonth() + 1).padStart(2, '0')
+  const dd = String(d.getDate()).padStart(2, '0')
+  return `${yyyy}-${mm}-${dd}`
+}
+
+// Sensible defaults pre-filled when creating a new campaign. Dates are seeded
+// relative to today in the order:
+//   open (day 0) → applicationDeadline (day 7) → close (day 14)
+//   → start (day 15) → end (day 30), with submission/content deadlines at day 21.
+// This ordering satisfies the cross-field date validation (Property 3) so a
+// freshly-opened form passes date checks without manual editing.
+//
+// Note on field mapping: this form's timeline model exposes startDate, endDate,
+// applicationDeadline, submissionDeadline and contentDeadline (there is no
+// separate "open"/"close" field), so the day-0/day-14 open/close markers are
+// folded into applicationDeadline (day 7) < startDate (day 15) < endDate (day 30),
+// with submission/content deadlines seeded at day 21.
+function createDefaultForm(): CampaignFormData {
+  return {
+    ...EMPTY_FORM,
+    // Basics
+    campaignType: 'Sponsored Post',
+    platform: 'Instagram',
+    description: '',
+    objective: '',
+    // Targeting
+    ageGroupMin: '18',
+    ageGroupMax: '65',
+    gender: 'Any',
+    targetLocation: 'Worldwide',
+    // Budget / payment
+    totalBudget: '0',
+    budgetPerCreator: '0',
+    paymentModel: 'Fixed',
+    // Eligibility
+    minimumFollowers: '0',
+    requiredEngagementRate: '0',
+    preferredNiche: 'General',
+    totalSlots: '1',
+    // Scheduling (relative to today; see ordering note above)
+    applicationDeadline: dateFromToday(7),
+    startDate: dateFromToday(15),
+    submissionDeadline: dateFromToday(21),
+    contentDeadline: dateFromToday(21),
+    endDate: dateFromToday(30),
+  }
+}
+
 const OBJECTIVES = ['Brand Awareness', 'Product Promotion', 'App Install', 'Lead Generation', 'Event Promotion']
-const CAMPAIGN_TYPES = ['Promotion', 'UGC', 'Review', 'Giveaway']
+const CAMPAIGN_TYPES = ['Sponsored Post', 'Promotion', 'UGC', 'Review', 'Giveaway']
 const POST_TYPES = ['Reel', 'Story', 'Static Post', 'Carousel', 'Live Session']
-const GENDERS = ['Male', 'Female', 'All']
+const GENDERS = ['Any', 'Male', 'Female', 'All']
 const PAYMENT_MODELS = ['Fixed', 'Commission', 'Barter']
-const NICHES = ['Fashion', 'Fitness', 'Tech', 'Beauty', 'Travel', 'Food', 'Lifestyle', 'Health', 'Education', 'Entertainment', 'Other']
+const NICHES = ['General', 'Fashion', 'Fitness', 'Tech', 'Beauty', 'Travel', 'Food', 'Lifestyle', 'Health', 'Education', 'Entertainment', 'Other']
 
 const STEPS = [
   { label: 'Details', icon: FileText },
@@ -211,7 +266,7 @@ interface CampaignFormPageProps {
 export function CampaignFormPage({ onBack, editingCampaignId, initialData }: CampaignFormPageProps) {
   const [step, setStep] = useState(0)
   const [form, setForm] = useState<CampaignFormData>(() => {
-    if (!initialData) return EMPTY_FORM
+    if (!initialData) return createDefaultForm()
     return hydrateForm(initialData)
   })
   const [errors, setErrors] = useState<Errors>({})

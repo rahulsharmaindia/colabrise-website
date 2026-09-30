@@ -149,8 +149,15 @@ export default async function handler(request: Request) {
         'Cache-Control': 'public, max-age=3600',
       },
     })
-  } catch (_err) {
-    // Fallback to SVG if rasterization fails — at least the browser shows it
+  } catch (err) {
+    // Surface the error so we can diagnose why rasterization failed.
+    // (Temporary — will revert to silent SVG fallback once fixed.)
+    if (url.searchParams.get('debug') === '1') {
+      return new Response(
+        `resvg error: ${(err as Error)?.message}\n\n${(err as Error)?.stack}`,
+        { status: 500, headers: { 'Content-Type': 'text/plain' } },
+      )
+    }
     return new Response(svg, {
       status: 200,
       headers: { 'Content-Type': 'image/svg+xml; charset=utf-8' },
