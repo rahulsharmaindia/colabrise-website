@@ -107,24 +107,24 @@ function createDefaultForm(): CampaignFormData {
   return {
     ...EMPTY_FORM,
     // Basics
-    campaignType: 'Sponsored Post',
+    campaignType: 'Promotion',
     platform: 'Instagram',
     description: '',
     objective: '',
     // Targeting
     ageGroupMin: '18',
     ageGroupMax: '65',
-    gender: 'Any',
+    gender: 'Male',
     targetLocation: 'Worldwide',
     // Budget / payment
-    totalBudget: '0',
-    budgetPerCreator: '0',
+    totalBudget: '100000',
+    budgetPerCreator: '10000',
     paymentModel: 'Fixed',
     // Eligibility
-    minimumFollowers: '0',
+    minimumFollowers: '10000',
     requiredEngagementRate: '0',
     preferredNiche: 'General',
-    totalSlots: '1',
+    totalSlots: '10',
     // Scheduling (relative to today; see ordering note above)
     applicationDeadline: dateFromToday(7),
     startDate: dateFromToday(15),
@@ -135,9 +135,9 @@ function createDefaultForm(): CampaignFormData {
 }
 
 const OBJECTIVES = ['Brand Awareness', 'Product Promotion', 'App Install', 'Lead Generation', 'Event Promotion']
-const CAMPAIGN_TYPES = ['Sponsored Post', 'Promotion', 'UGC', 'Review', 'Giveaway']
+const CAMPAIGN_TYPES = ['Promotion', 'UGC', 'Review', 'Giveaway']
 const POST_TYPES = ['Reel', 'Story', 'Static Post', 'Carousel', 'Live Session']
-const GENDERS = ['Any', 'Male', 'Female', 'All']
+const GENDERS = ['Male', 'Female', 'All']
 const PAYMENT_MODELS = ['Fixed', 'Commission', 'Barter']
 const NICHES = ['General', 'Fashion', 'Fitness', 'Tech', 'Beauty', 'Travel', 'Food', 'Lifestyle', 'Health', 'Education', 'Entertainment', 'Other']
 
