@@ -610,7 +610,7 @@ function KV({ label, value }: { label: string; value?: string | null }) {
   return (
     <div className="flex gap-3 mb-2.5 last:mb-0">
       <span className="text-xs text-gray-400 dark:text-gray-500 w-32 shrink-0 pt-0.5">{label}</span>
-      <span className="text-sm text-gray-200 flex-1">{value}</span>
+      <span className="text-sm font-medium text-gray-900 dark:text-white flex-1">{value}</span>
     </div>
   )
 }

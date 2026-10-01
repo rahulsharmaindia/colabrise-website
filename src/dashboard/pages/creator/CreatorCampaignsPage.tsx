@@ -22,7 +22,9 @@ import {
   BookOpen,
   Image,
   Share2,
+  Globe,
 } from 'lucide-react'
+import { FaInstagram, FaYoutube, FaXTwitter, FaFacebookF, FaTiktok, FaLinkedinIn } from 'react-icons/fa6'
 import { DashCard, DashButton, DashBadge, EmptyState } from '../../components/ui'
 import { getErrorMessage } from '../../../lib/api-client'
 import { CreatorCampaignDetailPage } from './CreatorCampaignDetailPage'
@@ -101,6 +103,31 @@ function PaymentIcon({ model }: { model?: string | null }) {
   if (lower === 'barter') return <Gift className="w-2.5 h-2.5" />
   if (lower === 'hybrid') return <Handshake className="w-2.5 h-2.5" />
   return <IndianRupee className="w-2.5 h-2.5" />
+}
+
+// ── Platform logo + label (same mapping as brand page) ───────
+
+const PLATFORM_ICONS: Record<string, { Icon: React.ComponentType<{ className?: string }>; color: string }> = {
+  instagram: { Icon: FaInstagram, color: 'text-pink-500' },
+  youtube: { Icon: FaYoutube, color: 'text-red-500' },
+  twitter: { Icon: FaXTwitter, color: 'text-gray-300' },
+  x: { Icon: FaXTwitter, color: 'text-gray-300' },
+  facebook: { Icon: FaFacebookF, color: 'text-blue-500' },
+  tiktok: { Icon: FaTiktok, color: 'text-gray-200' },
+  linkedin: { Icon: FaLinkedinIn, color: 'text-sky-500' },
+}
+
+function PlatformBadge({ platform }: { platform?: string | null }) {
+  if (!platform || !platform.trim()) return null
+  const entry = PLATFORM_ICONS[platform.trim().toLowerCase()]
+  const Icon = entry?.Icon ?? Globe
+  const color = entry?.color ?? 'text-gray-400 dark:text-gray-500'
+  return (
+    <span className="inline-flex items-center gap-1 text-[11px] font-medium text-gray-400 dark:text-gray-500 mt-0.5">
+      <Icon className={`w-3 h-3 ${color}`} />
+      {platform}
+    </span>
+  )
 }
 
 // ── Deliverables ─────────────────────────────────────────────
@@ -446,6 +473,7 @@ function CreatorCampaignCard({
             <h3 className="text-[13px] font-semibold text-gray-900 dark:text-white leading-tight mt-0.5 line-clamp-2">
               {campaign.title}
             </h3>
+            <PlatformBadge platform={campaign.platform} />
           </div>
 
           {/* Application status badge */}

@@ -109,6 +109,7 @@ export interface CreatorCampaign {
   endDate?: string | null
   applicationDeadline?: string | null
   preferredNiche?: string | null
+  platform?: string | null
   applicationStatus?: string | null // pending | approved | rejected | null (not applied)
 }
 

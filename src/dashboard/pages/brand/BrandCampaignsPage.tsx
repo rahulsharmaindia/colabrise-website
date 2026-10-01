@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { Megaphone, Calendar, Users, DollarSign, Loader2, RefreshCw, Target, Film, IndianRupee, Handshake, Percent, Gift, Clapperboard, BookOpen, Image, Share2 } from 'lucide-react'
+import { Megaphone, Calendar, Users, DollarSign, Loader2, RefreshCw, Target, Film, IndianRupee, Handshake, Percent, Gift, Clapperboard, BookOpen, Image, Share2, Globe } from 'lucide-react'
+import { FaInstagram, FaYoutube, FaXTwitter, FaFacebookF, FaTiktok, FaLinkedinIn } from 'react-icons/fa6'
 import { DashCard, DashButton, DashBadge, EmptyState } from '../../components/ui'
 import { listBrandCampaigns, type Campaign, type CampaignStatus } from '../../../api/campaigns'
 import { getErrorMessage } from '../../../lib/api-client'
@@ -115,6 +116,31 @@ function PaymentIcon({ model }: { model?: string | null }) {
   if (lower === 'barter') return <Gift className="w-2.5 h-2.5" />
   if (lower === 'hybrid') return <Handshake className="w-2.5 h-2.5" />
   return <IndianRupee className="w-2.5 h-2.5" />
+}
+
+// ── Platform logo + label ────────────────────────────────────
+
+const PLATFORM_ICONS: Record<string, { Icon: React.ComponentType<{ className?: string }>; color: string }> = {
+  instagram: { Icon: FaInstagram, color: 'text-pink-500' },
+  youtube: { Icon: FaYoutube, color: 'text-red-500' },
+  twitter: { Icon: FaXTwitter, color: 'text-gray-300' },
+  x: { Icon: FaXTwitter, color: 'text-gray-300' },
+  facebook: { Icon: FaFacebookF, color: 'text-blue-500' },
+  tiktok: { Icon: FaTiktok, color: 'text-gray-200' },
+  linkedin: { Icon: FaLinkedinIn, color: 'text-sky-500' },
+}
+
+function PlatformBadge({ platform }: { platform?: string | null }) {
+  if (!platform || !platform.trim()) return null
+  const entry = PLATFORM_ICONS[platform.trim().toLowerCase()]
+  const Icon = entry?.Icon ?? Globe
+  const color = entry?.color ?? 'text-gray-400 dark:text-gray-500'
+  return (
+    <span className="inline-flex items-center gap-1 text-[11px] text-gray-400 dark:text-gray-500 mt-0.5">
+      <Icon className={`w-3 h-3 ${color}`} />
+      {platform}
+    </span>
+  )
 }
 
 // ── Deliverables from raw campaign data ──────────────────────
@@ -302,9 +328,7 @@ export function BrandCampaignsPage() {
                   <div className="flex items-start justify-between mb-2 w-full">
                     <div className="min-w-0 flex-1">
                       <h3 className="text-sm font-semibold text-gray-900 dark:text-white truncate">{campaign.title}</h3>
-                      {campaign.platform && (
-                        <p className="text-[11px] text-gray-400 dark:text-gray-500 mt-0.5">{campaign.platform}</p>
-                      )}
+                      <PlatformBadge platform={campaign.platform} />
                     </div>
                     {isExpired(campaign) ? (
                       <span className="inline-flex items-center text-[10px] bg-red-500/15 text-red-400 px-2.5 py-0.5 rounded-full font-medium">
