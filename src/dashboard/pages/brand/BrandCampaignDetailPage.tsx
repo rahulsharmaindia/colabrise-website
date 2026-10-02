@@ -137,6 +137,10 @@ export function BrandCampaignDetailPage({ campaignId, onBack, onEdit, onDuplicat
     if (campaign.budgetPerCreator) params.set('p', String(campaign.budgetPerCreator))
     if (campaign.preferredNiche) params.set('n', campaign.preferredNiche)
     if (raw.paymentModel) params.set('pm', String(raw.paymentModel))
+    if (campaign.platform) params.set('plat', campaign.platform)
+    params.set('st', isExpiredCampaign(campaign) ? 'expired' : campaign.status)
+    params.set('date', formatDate(campaign.startDate))
+    params.set('slots', `${campaign.approvedCount}/${campaign.totalSlots}`)
     if (campaign.minimumFollowers) {
       const f = Number(campaign.minimumFollowers)
       params.set('f', f >= 1000 ? `${(f / 1000).toFixed(0)}K+` : `${f}+`)

@@ -116,85 +116,170 @@ function wrapText(text: string, maxChars: number, maxLines: number): string[] {
   return lines
 }
 
+// Rough text width estimate for Roboto at a given font size (used to size
+// pills and position inline elements). ~0.56em average advance works well.
+function textWidth(s: string, fontSize: number): number {
+  return s.length * fontSize * 0.56
+}
+
+// Deliverable glyph colors mirror the overview card (reel=purple, story=cyan,
+// post=emerald). Returns a tiny inline icon + label for one deliverable part.
+function deliverableColor(label: string): string {
+  const l = label.toLowerCase()
+  if (l.includes('reel')) return '#a855f7'
+  if (l.includes('stor')) return '#06b6d4'
+  if (l.includes('post')) return '#10b981'
+  return '#64748b'
+}
+
+/**
+ * Builds the share card as a LIGHT card that mirrors the in-app campaign
+ * overview card: title + status badge, platform row (Instagram glyph + name),
+ * niche/payment pills, deliverables with colored icons, a divider, then a
+ * footer with date, slots and budget. The long description is intentionally
+ * omitted. Layout targets a 1200×630 OG canvas.
+ */
 function buildSvg(p: URLSearchParams): string {
   const title = p.get('t') || 'Campaign on Colabrise'
-  const brand = p.get('b') || ''
   const budget = p.get('p') || ''
   const niche = p.get('n') || ''
   const paymentModel = p.get('pm') || 'Fixed'
   const deliverables = p.get('dl') || ''
-  const followers = p.get('f') || ''
-  const fit = p.get('ft') || ''
-  const daysLeft = p.get('days') || ''
-  const applied = p.get('app') || '0'
+  const platform = p.get('plat') || 'Instagram'
+  const status = (p.get('st') || '').toLowerCase()
+  const date = p.get('date') || ''
+  const slots = p.get('slots') || '' // e.g. "0/10"
 
   const formattedBudget = budget ? `\u20B9${Number(budget).toLocaleString('en-IN')}` : ''
-  const brandInitials = brand
-    ? brand.split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase()
-    : 'C'
+  const titleLines = wrapText(title, 30, 2)
 
-  const titleLines = wrapText(title, 26, 2)
+  // ── Card geometry ──────────────────────────────────────────────────────────
+  const CARD_X = 80
+  const CARD_Y = 70
+  const CARD_W = 1040
+  const CARD_H = 490
+  const PAD = 56 // inner padding
+  const left = CARD_X + PAD
+  const right = CARD_X + CARD_W - PAD
 
-  const pills: { label: string; color: string; bg: string; border: string }[] = []
-  if (deliverables) pills.push({ label: deliverables, color: '#c084fc', bg: '#2a1a45', border: '#7c3aed' })
-  if (followers) pills.push({ label: `${followers} followers`, color: '#60a5fa', bg: '#14243f', border: '#2563eb' })
-  if (fit) pills.push({ label: `${fit} fit`, color: '#34d399', bg: '#0f2e26', border: '#059669' })
-
-  let pillX = 64
-  const pillY = 260 + (titleLines.length - 1) * 52
-  const pillSvg = pills
-    .map((pill) => {
-      const w = pill.label.length * 15 + 48
-      const rect = `<rect x="${pillX}" y="${pillY}" width="${w}" height="52" rx="16" fill="${pill.bg}" stroke="${pill.border}" stroke-width="2"/>`
-      const text = `<text x="${pillX + 24}" y="${pillY + 34}" font-size="26" font-weight="600" fill="${pill.color}" font-family="Roboto">${esc(pill.label)}</text>`
-      pillX += w + 16
-      return rect + text
-    })
-    .join('')
-
-  const footerY = 560
-  let footerX = 64
-  const footerParts: string[] = []
-  if (daysLeft) {
-    footerParts.push(`<text x="${footerX}" y="${footerY}" font-size="26" fill="#94a3b8" font-family="Roboto">${esc(daysLeft)}d left</text>`)
-    footerX += daysLeft.length * 16 + 90
-  }
-  footerParts.push(`<text x="${footerX}" y="${footerY}" font-size="26" fill="#94a3b8" font-family="Roboto">${esc(applied)} applied</text>`)
-  footerX += String(applied).length * 16 + 110
-  if (niche) {
-    const nw = niche.length * 15 + 36
-    footerParts.push(`<rect x="${footerX}" y="${footerY - 30}" width="${nw}" height="40" rx="10" fill="#3a1414" stroke="#dc2626"/>`)
-    footerParts.push(`<text x="${footerX + 18}" y="${footerY}" font-size="24" font-weight="600" fill="#f87171" font-family="Roboto">${esc(niche)}</text>`)
-  }
-  const budgetSvg = formattedBudget
-    ? `<text x="1136" y="${footerY}" font-size="40" font-weight="700" fill="#ffffff" text-anchor="end" font-family="Roboto">${esc(formattedBudget)}</text>
-       <text x="1136" y="${footerY + 30}" font-size="22" fill="#64748b" text-anchor="end" font-family="Roboto">/${esc(paymentModel)}</text>`
-    : ''
-
+  // ── Title + status badge ─────────────────────────────────────────────────────
+  const titleY = CARD_Y + PAD + 44
   const titleSvg = titleLines
-    .map((line, i) => `<text x="168" y="${175 + i * 52}" font-size="44" font-weight="700" fill="#ffffff" font-family="Roboto">${esc(line)}</text>`)
+    .map(
+      (line, i) =>
+        `<text x="${left}" y="${titleY + i * 58}" font-size="52" font-weight="700" fill="#0f172a" font-family="Roboto">${esc(line)}</text>`,
+    )
     .join('')
+
+  const STATUS_COLORS: Record<string, { fill: string; text: string }> = {
+    draft: { fill: '#e2e8f0', text: '#475569' },
+    active: { fill: '#dcfce7', text: '#15803d' },
+    published: { fill: '#dbeafe', text: '#1d4ed8' },
+    completed: { fill: '#dbeafe', text: '#1d4ed8' },
+    expired: { fill: '#fee2e2', text: '#b91c1c' },
+    cancelled: { fill: '#fee2e2', text: '#b91c1c' },
+  }
+  let statusSvg = ''
+  if (status) {
+    const c = STATUS_COLORS[status] ?? { fill: '#e2e8f0', text: '#475569' }
+    const sw = textWidth(status, 26) + 44
+    const sx = right - sw
+    const sy = CARD_Y + PAD - 6
+    statusSvg =
+      `<rect x="${sx}" y="${sy}" width="${sw}" height="48" rx="24" fill="${c.fill}"/>` +
+      `<text x="${sx + sw / 2}" y="${sy + 32}" font-size="26" font-weight="600" fill="${c.text}" text-anchor="middle" font-family="Roboto">${esc(status)}</text>`
+  }
+
+  // ── Platform row (Instagram glyph + name) ────────────────────────────────────
+  const platY = titleY + (titleLines.length - 1) * 58 + 52
+  // Simple rounded-square Instagram glyph in brand pink.
+  const igIcon =
+    `<rect x="${left}" y="${platY - 24}" width="34" height="34" rx="10" fill="none" stroke="#ec4899" stroke-width="3.5"/>` +
+    `<circle cx="${left + 17}" cy="${platY - 7}" r="8" fill="none" stroke="#ec4899" stroke-width="3.5"/>` +
+    `<circle cx="${left + 27}" cy="${platY - 17}" r="2.6" fill="#ec4899"/>`
+  const platSvg =
+    igIcon +
+    `<text x="${left + 48}" y="${platY}" font-size="30" fill="#64748b" font-family="Roboto">${esc(platform)}</text>`
+
+  // ── Niche + payment pills ────────────────────────────────────────────────────
+  const pillY = platY + 44
+  let pillX = left
+  const pillParts: string[] = []
+  if (niche) {
+    const w = textWidth(niche, 28) + 76
+    pillParts.push(`<rect x="${pillX}" y="${pillY}" width="${w}" height="52" rx="26" fill="#e0f2fe"/>`)
+    // target glyph
+    pillParts.push(`<circle cx="${pillX + 30}" cy="${pillY + 26}" r="11" fill="none" stroke="#0284c7" stroke-width="3"/>`)
+    pillParts.push(`<circle cx="${pillX + 30}" cy="${pillY + 26}" r="4" fill="#0284c7"/>`)
+    pillParts.push(`<text x="${pillX + 50}" y="${pillY + 35}" font-size="28" font-weight="600" fill="#0284c7" font-family="Roboto">${esc(niche)}</text>`)
+    pillX += w + 20
+  }
+  if (paymentModel) {
+    const w = textWidth(paymentModel, 28) + 76
+    pillParts.push(`<rect x="${pillX}" y="${pillY}" width="${w}" height="52" rx="26" fill="#f1f5f9"/>`)
+    pillParts.push(`<text x="${pillX + 26}" y="${pillY + 36}" font-size="28" fill="#475569" font-family="Roboto">\u20B9</text>`)
+    pillParts.push(`<text x="${pillX + 50}" y="${pillY + 35}" font-size="28" font-weight="500" fill="#475569" font-family="Roboto">${esc(paymentModel)}</text>`)
+    pillX += w + 20
+  }
+  const pillSvg = pillParts.join('')
+
+  // ── Deliverables row (icon + label per part) ─────────────────────────────────
+  const delivY = pillY + 94
+  let delivX = left
+  const delivParts: string[] = []
+  if (deliverables) {
+    for (const part of deliverables.split('+').map((x) => x.trim()).filter(Boolean)) {
+      const color = deliverableColor(part)
+      // small rounded square icon
+      delivParts.push(`<rect x="${delivX}" y="${delivY - 22}" width="30" height="30" rx="7" fill="none" stroke="${color}" stroke-width="3"/>`)
+      delivParts.push(`<text x="${delivX + 44}" y="${delivY}" font-size="28" fill="#64748b" font-family="Roboto">${esc(part)}</text>`)
+      delivX += 44 + textWidth(part, 28) + 44
+    }
+  }
+  const delivSvg = delivParts.join('')
+
+  // ── Divider ──────────────────────────────────────────────────────────────────
+  const divY = delivY + 56
+  const dividerSvg = `<line x1="${left}" y1="${divY}" x2="${right}" y2="${divY}" stroke="#e2e8f0" stroke-width="2"/>`
+
+  // ── Footer: date · slots · budget ────────────────────────────────────────────
+  const footerY = divY + 56
+  let footX = left
+  const footParts: string[] = []
+  if (date) {
+    footParts.push(`<rect x="${footX}" y="${footerY - 24}" width="28" height="26" rx="6" fill="none" stroke="#94a3b8" stroke-width="2.5"/>`)
+    footParts.push(`<text x="${footX + 42}" y="${footerY}" font-size="28" fill="#64748b" font-family="Roboto">${esc(date)}</text>`)
+    footX += 42 + textWidth(date, 28) + 56
+  }
+  if (slots) {
+    footParts.push(`<circle cx="${footX + 12}" cy="${footerY - 12}" r="9" fill="none" stroke="#94a3b8" stroke-width="2.5"/>`)
+    footParts.push(`<text x="${footX + 34}" y="${footerY}" font-size="28" fill="#64748b" font-family="Roboto">${esc(slots)}</text>`)
+  }
+  // Budget right-aligned.
+  const budgetSvg = formattedBudget
+    ? `<text x="${right}" y="${footerY}" font-size="40" font-weight="700" fill="#0f172a" text-anchor="end" font-family="Roboto">${esc(formattedBudget)}</text>`
+    : ''
 
   return `<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="#f59e0b"/><stop offset="50%" stop-color="#a855f7"/><stop offset="100%" stop-color="#6366f1"/>
-    </linearGradient>
-    <linearGradient id="avatar" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#6366f1"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#eef2ff"/><stop offset="100%" stop-color="#f8fafc"/>
     </linearGradient>
   </defs>
-  <rect width="1200" height="630" fill="#0f0f1a"/>
-  <rect width="1200" height="6" fill="url(#bar)"/>
-  <rect x="64" y="96" width="80" height="80" rx="20" fill="url(#avatar)"/>
-  <text x="104" y="150" font-size="34" font-weight="700" fill="#ffffff" text-anchor="middle" font-family="Roboto">${esc(brandInitials)}</text>
-  ${brand ? `<text x="168" y="122" font-size="26" fill="#a78bfa" font-family="Roboto">${esc(brand)}</text>` : ''}
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <!-- Card -->
+  <rect x="${CARD_X}" y="${CARD_Y}" width="${CARD_W}" height="${CARD_H}" rx="28" fill="#ffffff" stroke="#bfdbfe" stroke-width="3"/>
   ${titleSvg}
+  ${statusSvg}
+  ${platSvg}
   ${pillSvg}
-  ${footerParts.join('\n  ')}
+  ${delivSvg}
+  ${dividerSvg}
+  ${footParts.join('\n  ')}
   ${budgetSvg}
-  <rect x="64" y="592" width="22" height="22" rx="6" fill="url(#avatar)"/>
-  <text x="94" y="608" font-size="18" fill="#64748b" font-family="Roboto">Colabrise</text>
+  <!-- Brand mark -->
+  <rect x="${left}" y="590" width="20" height="20" rx="6" fill="#8b5cf6"/>
+  <text x="${left + 30}" y="606" font-size="20" fill="#94a3b8" font-family="Roboto">Colabrise</text>
 </svg>`
 }
 

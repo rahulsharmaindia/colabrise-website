@@ -40,7 +40,7 @@ export default async function handler(request: Request, _context: Context) {
   if (brand) imageParams.set('b', brand)
   if (budget) imageParams.set('p', budget)
   if (niche) imageParams.set('n', niche)
-  for (const key of ['pm', 'f', 'ft', 'dl', 'days', 'app']) {
+  for (const key of ['pm', 'f', 'ft', 'dl', 'days', 'app', 'plat', 'st', 'date', 'slots']) {
     const v = p.get(key)
     if (v) imageParams.set(key, v)
   }

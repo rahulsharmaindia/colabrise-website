@@ -586,6 +586,10 @@ function CreatorCampaignCard({
               if (campaign.preferredNiche) params.set('n', campaign.preferredNiche)
               const raw = campaign as unknown as Record<string, unknown>
               if (raw.paymentModel) params.set('pm', String(raw.paymentModel))
+              if (campaign.platform) params.set('plat', campaign.platform)
+              params.set('st', campaign.status)
+              params.set('date', formatDate(campaign.startDate))
+              params.set('slots', `${campaign.approvedCount}/${campaign.totalSlots}`)
               if (raw.minimumFollowers) {
                 const f = Number(raw.minimumFollowers)
                 params.set('f', f >= 1000 ? `${(f / 1000).toFixed(0)}K+` : `${f}+`)

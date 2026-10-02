@@ -51,6 +51,10 @@ function shareCampaign(campaign: Campaign): void {
   if (campaign.budgetPerCreator) params.set('p', String(campaign.budgetPerCreator))
   if (campaign.preferredNiche) params.set('n', campaign.preferredNiche)
   if (campaign.paymentModel) params.set('pm', campaign.paymentModel)
+  if (campaign.platform) params.set('plat', campaign.platform)
+  params.set('st', isExpired(campaign) ? 'expired' : campaign.status)
+  params.set('date', formatDate(campaign.startDate))
+  params.set('slots', `${campaign.approvedCount}/${campaign.totalSlots}`)
   if (campaign.minimumFollowers) {
     const f = Number(campaign.minimumFollowers)
     params.set('f', f >= 1000 ? `${(f / 1000).toFixed(0)}K+` : `${f}+`)
@@ -61,7 +65,7 @@ function shareCampaign(campaign: Campaign): void {
     if (d.reels > 0) dparts.push(`${d.reels} ${d.reels === 1 ? 'Reel' : 'Reels'}`)
     if (d.stories > 0) dparts.push(`${d.stories} ${d.stories === 1 ? 'Story' : 'Stories'}`)
     if (d.posts > 0) dparts.push(`${d.posts} ${d.posts === 1 ? 'Post' : 'Posts'}`)
-    if (dparts.length > 0) params.set('dl', dparts.join(' + ').slice(0, 25))
+    if (dparts.length > 0) params.set('dl', dparts.join(' + ').slice(0, 30))
   }
   params.set('app', String(campaign.approvedCount))
   const shareUrl = `${window.location.origin}/api/og?${params.toString()}`
