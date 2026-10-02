@@ -22,6 +22,74 @@ function ensureWasm(): Promise<void> {
   return wasmReady
 }
 
+// resvg-wasm runs in an isolated sandbox with NO system fonts available.
+// Without a font buffer, every <text> glyph renders as an empty .notdef box
+// (the "boxes but no values" bug). We fetch real TTF buffers once per edge
+// instance and hand them to resvg via `fontBuffers`.
+//
+// Roboto Regular + Bold are served as raw TTF bytes (resvg needs TTF/OTF — not
+// the CSS that fonts.googleapis.com returns, nor the woff2 that @fontsource
+// ships). The internal font family name in these files is exactly "Roboto",
+// which must match `sansSerifFamily`/`defaultFontFamily` below for resvg to
+// resolve glyphs — otherwise every <text> renders as an invisible .notdef box.
+//
+// Each weight lists multiple mirrors; a single CDN hiccup inside the edge
+// sandbox must not produce a textless image, so we try mirrors in order.
+const FONT_SOURCES: string[][] = [
+  [
+    'https://cdn.jsdelivr.net/gh/googlefonts/roboto-2@main/src/hinted/Roboto-Regular.ttf',
+    'https://raw.githubusercontent.com/googlefonts/roboto-2/main/src/hinted/Roboto-Regular.ttf',
+  ],
+  [
+    'https://cdn.jsdelivr.net/gh/googlefonts/roboto-2@main/src/hinted/Roboto-Bold.ttf',
+    'https://raw.githubusercontent.com/googlefonts/roboto-2/main/src/hinted/Roboto-Bold.ttf',
+  ],
+]
+
+async function fetchWithTimeout(url: string, ms: number): Promise<Response> {
+  const ctrl = new AbortController()
+  const timer = setTimeout(() => ctrl.abort(), ms)
+  try {
+    return await fetch(url, { signal: ctrl.signal })
+  } finally {
+    clearTimeout(timer)
+  }
+}
+
+// Load one weight, trying each mirror until one yields valid font bytes.
+async function loadFont(mirrors: string[]): Promise<Uint8Array> {
+  let lastErr: unknown
+  for (const url of mirrors) {
+    try {
+      const res = await fetchWithTimeout(url, 4000)
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const buf = new Uint8Array(await res.arrayBuffer())
+      // Sanity-check it's a real sfnt font (0x00010000 TrueType or 'OTTO').
+      if (buf.length < 4) throw new Error('empty body')
+      const sig = (buf[0] << 24) | (buf[1] << 16) | (buf[2] << 8) | buf[3]
+      const isTrueType = sig === 0x00010000
+      const isOtto = buf[0] === 0x4f && buf[1] === 0x54 && buf[2] === 0x54 && buf[3] === 0x4f
+      if (!isTrueType && !isOtto) throw new Error('not a TTF/OTF')
+      return buf
+    } catch (e) {
+      lastErr = e
+    }
+  }
+  throw new Error(`all mirrors failed: ${(lastErr as Error)?.message}`)
+}
+
+let fontBuffersReady: Promise<Uint8Array[]> | null = null
+function ensureFonts(): Promise<Uint8Array[]> {
+  if (!fontBuffersReady) {
+    fontBuffersReady = Promise.all(FONT_SOURCES.map(loadFont)).catch((e) => {
+      // Reset so a later request can retry rather than caching the failure.
+      fontBuffersReady = null
+      throw e
+    })
+  }
+  return fontBuffersReady
+}
+
 function esc(s: string): string {
   return s
     .replace(/&/g, '&amp;')
@@ -78,7 +146,7 @@ function buildSvg(p: URLSearchParams): string {
     .map((pill) => {
       const w = pill.label.length * 15 + 48
       const rect = `<rect x="${pillX}" y="${pillY}" width="${w}" height="52" rx="16" fill="${pill.bg}" stroke="${pill.border}" stroke-width="2"/>`
-      const text = `<text x="${pillX + 24}" y="${pillY + 34}" font-size="26" font-weight="600" fill="${pill.color}" font-family="sans-serif">${esc(pill.label)}</text>`
+      const text = `<text x="${pillX + 24}" y="${pillY + 34}" font-size="26" font-weight="600" fill="${pill.color}" font-family="Roboto">${esc(pill.label)}</text>`
       pillX += w + 16
       return rect + text
     })
@@ -88,23 +156,23 @@ function buildSvg(p: URLSearchParams): string {
   let footerX = 64
   const footerParts: string[] = []
   if (daysLeft) {
-    footerParts.push(`<text x="${footerX}" y="${footerY}" font-size="26" fill="#94a3b8" font-family="sans-serif">${esc(daysLeft)}d left</text>`)
+    footerParts.push(`<text x="${footerX}" y="${footerY}" font-size="26" fill="#94a3b8" font-family="Roboto">${esc(daysLeft)}d left</text>`)
     footerX += daysLeft.length * 16 + 90
   }
-  footerParts.push(`<text x="${footerX}" y="${footerY}" font-size="26" fill="#94a3b8" font-family="sans-serif">${esc(applied)} applied</text>`)
+  footerParts.push(`<text x="${footerX}" y="${footerY}" font-size="26" fill="#94a3b8" font-family="Roboto">${esc(applied)} applied</text>`)
   footerX += String(applied).length * 16 + 110
   if (niche) {
     const nw = niche.length * 15 + 36
     footerParts.push(`<rect x="${footerX}" y="${footerY - 30}" width="${nw}" height="40" rx="10" fill="#3a1414" stroke="#dc2626"/>`)
-    footerParts.push(`<text x="${footerX + 18}" y="${footerY}" font-size="24" font-weight="600" fill="#f87171" font-family="sans-serif">${esc(niche)}</text>`)
+    footerParts.push(`<text x="${footerX + 18}" y="${footerY}" font-size="24" font-weight="600" fill="#f87171" font-family="Roboto">${esc(niche)}</text>`)
   }
   const budgetSvg = formattedBudget
-    ? `<text x="1136" y="${footerY}" font-size="40" font-weight="700" fill="#ffffff" text-anchor="end" font-family="sans-serif">${esc(formattedBudget)}</text>
-       <text x="1136" y="${footerY + 30}" font-size="22" fill="#64748b" text-anchor="end" font-family="sans-serif">/${esc(paymentModel)}</text>`
+    ? `<text x="1136" y="${footerY}" font-size="40" font-weight="700" fill="#ffffff" text-anchor="end" font-family="Roboto">${esc(formattedBudget)}</text>
+       <text x="1136" y="${footerY + 30}" font-size="22" fill="#64748b" text-anchor="end" font-family="Roboto">/${esc(paymentModel)}</text>`
     : ''
 
   const titleSvg = titleLines
-    .map((line, i) => `<text x="168" y="${175 + i * 52}" font-size="44" font-weight="700" fill="#ffffff" font-family="sans-serif">${esc(line)}</text>`)
+    .map((line, i) => `<text x="168" y="${175 + i * 52}" font-size="44" font-weight="700" fill="#ffffff" font-family="Roboto">${esc(line)}</text>`)
     .join('')
 
   return `<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
@@ -119,14 +187,14 @@ function buildSvg(p: URLSearchParams): string {
   <rect width="1200" height="630" fill="#0f0f1a"/>
   <rect width="1200" height="6" fill="url(#bar)"/>
   <rect x="64" y="96" width="80" height="80" rx="20" fill="url(#avatar)"/>
-  <text x="104" y="150" font-size="34" font-weight="700" fill="#ffffff" text-anchor="middle" font-family="sans-serif">${esc(brandInitials)}</text>
-  ${brand ? `<text x="168" y="122" font-size="26" fill="#a78bfa" font-family="sans-serif">${esc(brand)}</text>` : ''}
+  <text x="104" y="150" font-size="34" font-weight="700" fill="#ffffff" text-anchor="middle" font-family="Roboto">${esc(brandInitials)}</text>
+  ${brand ? `<text x="168" y="122" font-size="26" fill="#a78bfa" font-family="Roboto">${esc(brand)}</text>` : ''}
   ${titleSvg}
   ${pillSvg}
   ${footerParts.join('\n  ')}
   ${budgetSvg}
   <rect x="64" y="592" width="22" height="22" rx="6" fill="url(#avatar)"/>
-  <text x="94" y="608" font-size="18" fill="#64748b" font-family="sans-serif">Colabrise</text>
+  <text x="94" y="608" font-size="18" fill="#64748b" font-family="Roboto">Colabrise</text>
 </svg>`
 }
 
@@ -136,9 +204,24 @@ export default async function handler(request: Request) {
 
   try {
     await ensureWasm()
+    const fontBuffers = await ensureFonts()
+
+    // Never render a textless PNG: if no usable font loaded, the output would
+    // be the "boxes but no values" card the share preview was showing. Treat
+    // that as a hard failure so the catch runs instead of emitting tofu.
+    if (!fontBuffers.length) throw new Error('no font buffers loaded')
+
     const resvg = new Resvg(svg, {
       fitTo: { mode: 'width', value: 1200 },
-      font: { loadSystemFonts: false },
+      font: {
+        // Load our own font bytes (no system fonts in the sandbox). The SVG now
+        // names "Roboto" directly, and we also map the generic families to it
+        // so every <text> resolves to real glyphs instead of .notdef boxes.
+        fontBuffers,
+        loadSystemFonts: false,
+        defaultFontFamily: 'Roboto',
+        sansSerifFamily: 'Roboto',
+      },
     })
     const pngData = resvg.render().asPng()
 
@@ -146,21 +229,24 @@ export default async function handler(request: Request) {
       status: 200,
       headers: {
         'Content-Type': 'image/png',
-        'Cache-Control': 'public, max-age=3600',
+        // Short cache so a transient font-fetch failure can't pin a bad image
+        // for an hour; social scrapers still cache on their own side.
+        'Cache-Control': 'public, max-age=300',
       },
     })
   } catch (err) {
-    // Surface the error so we can diagnose why rasterization failed.
-    // (Temporary — will revert to silent SVG fallback once fixed.)
     if (url.searchParams.get('debug') === '1') {
       return new Response(
-        `resvg error: ${(err as Error)?.message}\n\n${(err as Error)?.stack}`,
+        `og-image error: ${(err as Error)?.message}\n\n${(err as Error)?.stack}`,
         { status: 500, headers: { 'Content-Type': 'text/plain' } },
       )
     }
-    return new Response(svg, {
-      status: 200,
-      headers: { 'Content-Type': 'image/svg+xml; charset=utf-8' },
+    // Do NOT fall back to raw SVG — WhatsApp/Facebook can't render SVG as an
+    // og:image, which is exactly how the blank card slips through. Return a
+    // non-200 with no-cache so scrapers retry rather than caching a blank.
+    return new Response('og-image generation failed', {
+      status: 502,
+      headers: { 'Content-Type': 'text/plain', 'Cache-Control': 'no-store' },
     })
   }
 }
