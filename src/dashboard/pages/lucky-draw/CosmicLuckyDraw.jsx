@@ -286,6 +286,14 @@ export default function CosmicLuckyDraw() {
           const pulse = 1 + Math.sin(anim.pulse * 4) * 0.08 * anim.revealScale
           const winScale = (1 + anim.revealScale * 1.6) * pulse
           fontSize = BASE_FONT * (FOCAL_LENGTH / WINNER_Z) * winScale * dpr
+          // Clamp so long names never overflow a narrow (mobile) canvas:
+          // shrink the font until the text fits within 90% of the width.
+          ctx.font = `800 ${fontSize}px ui-sans-serif, system-ui, sans-serif`
+          const maxTextW = W * 0.9
+          const measured = ctx.measureText(s.text).width
+          if (measured > maxTextW) {
+            fontSize = fontSize * (maxTextW / measured)
+          }
           ctx.font = `800 ${fontSize}px ui-sans-serif, system-ui, sans-serif`
           ctx.globalAlpha = 1
           ctx.shadowColor = '#34d399'
@@ -402,13 +410,17 @@ export default function CosmicLuckyDraw() {
   }
 
   // ── Render ───────────────────────────────────────────────────────────────────
+  // Mobile-first: a single scrolling column — the animation viewport sits on
+  // top with a guaranteed height, the config panel flows beneath it. At `lg`
+  // this upgrades to the fixed-height split-screen (config left, viewport right).
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-4 h-full w-full bg-slate-950 text-white overflow-hidden rounded-2xl">
-      {/* ── Left: configuration panel (glassmorphism) ── */}
-      <div className="lg:col-span-1 bg-slate-900/50 backdrop-blur-md border-b lg:border-b-0 lg:border-r border-slate-800 p-6 flex flex-col gap-5">
+    <div className="flex flex-col lg:grid lg:grid-cols-4 min-h-full lg:h-full w-full bg-slate-950 text-white lg:overflow-hidden rounded-2xl">
+      {/* ── Config panel (glassmorphism). On mobile it renders BELOW the
+           viewport via order utilities; on desktop it's the left column. ── */}
+      <div className="order-2 lg:order-none lg:col-span-1 bg-slate-900/50 backdrop-blur-md border-t lg:border-t-0 lg:border-r border-slate-800 p-5 sm:p-6 flex flex-col gap-4 sm:gap-5 lg:overflow-y-auto">
         <div className="flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-cyan-400" />
-          <h2 className="text-lg font-bold tracking-wide">
+          <Sparkles className="w-5 h-5 text-cyan-400 shrink-0" />
+          <h2 className="text-base sm:text-lg font-bold tracking-wide">
             Cosmic <span className="text-cyan-400">Lucky Draw</span>
           </h2>
         </div>
@@ -423,7 +435,7 @@ export default function CosmicLuckyDraw() {
             disabled={running}
             spellCheck={false}
             placeholder={'Paste names, one per line\nor separated, by, commas'}
-            className="h-56 w-full resize-none rounded-xl border border-slate-700 bg-slate-950/70 px-3.5 py-3 text-sm text-cyan-50 placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all font-mono disabled:opacity-50"
+            className="h-32 sm:h-40 lg:h-56 w-full resize-none rounded-xl border border-slate-700 bg-slate-950/70 px-3.5 py-3 text-sm text-cyan-50 placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all font-mono disabled:opacity-50"
           />
         </div>
 
@@ -476,10 +488,12 @@ export default function CosmicLuckyDraw() {
         </div>
       </div>
 
-      {/* ── Right: animation viewport ── */}
+      {/* ── Animation viewport. On mobile it renders FIRST (order-1) with a
+           guaranteed viewport-relative height so the starfield is always
+           visible; on desktop it's the 3/4-width right column. ── */}
       <div
         ref={containerRef}
-        className="lg:col-span-3 relative h-full min-h-[320px] bg-black overflow-hidden"
+        className="order-1 lg:order-none lg:col-span-3 relative h-[50vh] min-h-[280px] lg:h-full lg:min-h-0 bg-black overflow-hidden"
       >
         <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
         {/* Idle hint overlay (hidden once a draw starts / finishes) */}
