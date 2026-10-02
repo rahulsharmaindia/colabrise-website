@@ -1,4 +1,4 @@
-import { Building2, Megaphone, LayoutDashboard, Users, Settings, Compass, type LucideIcon } from 'lucide-react'
+import { Building2, Megaphone, LayoutDashboard, Users, Settings, Compass, Sparkles, type LucideIcon } from 'lucide-react'
 import type { UserRole } from '../hooks/useUserRole'
 
 export interface NavItem {
@@ -27,6 +27,12 @@ const brandNav: NavSection[] = [
     ],
   },
   {
+    title: 'Tools',
+    items: [
+      { label: 'Lucky Draw', href: '/dashboard/lucky-draw', icon: Sparkles },
+    ],
+  },
+  {
     title: 'Account',
     items: [
       { label: 'Settings', href: '/dashboard/settings', icon: Settings },
@@ -46,6 +52,12 @@ const creatorNav: NavSection[] = [
     items: [
       { label: 'Campaigns', href: '/dashboard/campaigns', icon: Megaphone },
       { label: 'Brands', href: '/dashboard/brands', icon: Building2 },
+    ],
+  },
+  {
+    title: 'Tools',
+    items: [
+      { label: 'Lucky Draw', href: '/dashboard/lucky-draw', icon: Sparkles },
     ],
   },
   {

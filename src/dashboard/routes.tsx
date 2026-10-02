@@ -8,6 +8,7 @@ import {
   CreatorsPage,
   SettingsPage,
   CreatorMyCampaignsPage,
+  LuckyDrawPage,
 } from './pages'
 
 /**
@@ -35,6 +36,7 @@ export function DashboardRoutes() {
       <Route path="campaigns/:campaignId" element={<CampaignsPage />} />
       <Route path="creators" element={<CreatorsPage />} />
       <Route path="my-campaigns" element={<CreatorMyCampaignsPage />} />
+      <Route path="lucky-draw" element={<LuckyDrawPage />} />
       <Route path="settings" element={<SettingsPage />} />
     </Route>
   )
